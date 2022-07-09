@@ -8,18 +8,23 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import java.util.ArrayList
 
-class EditorAdapter : RecyclerView.Adapter<EditorAdapter.ViewHolder>() {
+class EditorAdapter(private val listener: OnEditorSelectedListener) : RecyclerView.Adapter<EditorAdapter.ViewHolder>() {
     private val toolList: MutableList<ToolModel> = ArrayList()
 
+    interface OnEditorSelectedListener {
+        fun onSelected(toolType: ToolType)
+    }
+
     init {
-        toolList.add(ToolModel(R.string.editor_shape, R.drawable.ic_editor_shape))
-        toolList.add(ToolModel(R.string.editor_image, R.drawable.ic_editor_image))
+        toolList.add(ToolModel(R.string.editor_shape, R.drawable.ic_editor_shape, ToolType.SHAPE))
+        toolList.add(ToolModel(R.string.editor_image, R.drawable.ic_editor_image, ToolType.IMAGE))
     }
 
     // Store the resource such as R.string, R.drawable
     internal class ToolModel(
         val name: Int,
-        val icon: Int
+        val icon: Int,
+        val type: ToolType
     )
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -41,6 +46,18 @@ class EditorAdapter : RecyclerView.Adapter<EditorAdapter.ViewHolder>() {
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val imageView: ImageView = itemView.findViewById(R.id.image_editor_icon)
         val textView: TextView = itemView.findViewById(R.id.text_editor)
+
+        init {
+            itemView.setOnClickListener {
+                listener.onSelected(
+                    toolList[layoutPosition].type
+                )
+            }
+        }
     }
 
+}
+
+enum class ToolType {
+    SHAPE, IMAGE
 }
