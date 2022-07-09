@@ -3,4 +3,6 @@
 
     <!--accessibility, give default value-->
     <string name="content_description">content description</string>
+    <string name="editor_shape">Shape</string>
+    <string name="editor_image">Image</string>
 </resources>
