@@ -12,6 +12,5 @@
         android:layout_margin="4dp"
         android:padding="2dp"
         android:textColor="#FFFFFF"
-        android:textSize="@dimen/shape_text_size"
-        tools:android="Burhanuddin" />
+        android:textSize="@dimen/shape_text_size" />
 </LinearLayout>
