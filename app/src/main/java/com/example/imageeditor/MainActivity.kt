@@ -3,16 +3,29 @@ package com.example.imageeditor
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.recyclerview.widget.RecyclerView
+import com.example.imageeditor.core.PhotoEditor
+import com.example.imageeditor.core.view.PhotoEditorView
 import com.example.imageeditor.fragment.ShapeFragment
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
-class MainActivity : AppCompatActivity(), EditorAdapter.OnEditorSelectedListener {
+class MainActivity : AppCompatActivity(), EditorAdapter.OnEditorSelectedListener,
+    ShapeFragment.ShapeListener {
     private lateinit var shapeFragment: ShapeFragment
+    var photoEditor: PhotoEditor? = null
+    private var photoEditorView: PhotoEditorView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        shapeFragment = ShapeFragment()
         setContentView(R.layout.activity_main)
+        shapeFragment = ShapeFragment()
+        shapeFragment.setListener(this)
+        photoEditorView = findViewById(R.id.photoEditorView)
+
+        photoEditor = photoEditorView?.run {
+            PhotoEditor.Builder(this)
+                .build() // build photo editor sdk
+        }
+
         initRecycleView()
     }
 
@@ -30,7 +43,6 @@ class MainActivity : AppCompatActivity(), EditorAdapter.OnEditorSelectedListener
 
     override fun onSelected(toolType: ToolType) {
         when (toolType) {
-
             ToolType.SHAPE -> {
                 showBottomSheetDialogFragment(shapeFragment)
             }
@@ -39,5 +51,9 @@ class MainActivity : AppCompatActivity(), EditorAdapter.OnEditorSelectedListener
                 // TODO Create the Image Browser which can select photo from local storage
             }
         }
+    }
+
+    override fun onClick(emojiUnicode: String) {
+        photoEditor?.addEmoji(null, emojiUnicode)
     }
 }

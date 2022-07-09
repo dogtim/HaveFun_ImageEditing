@@ -14,21 +14,30 @@ import com.example.imageeditor.R
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 class ShapeFragment : BottomSheetDialogFragment() {
+    private var listener: ShapeListener? = null
+
+    interface ShapeListener {
+        fun onClick(emojiUnicode: String)
+    }
 
     override fun onCreate(@Nullable savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         // Make the background transparent
-        setStyle(STYLE_NORMAL, com.example.imageeditor.R.style.CustomBottomSheetDialogTheme)
+        setStyle(STYLE_NORMAL, R.style.CustomBottomSheetDialogTheme)
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val dialog = super.onCreateDialog(savedInstanceState)
-        val contentView = View.inflate(context, com.example.imageeditor.R.layout.fragment_bottom_shape_dialog, null)
+        val contentView = View.inflate(context, R.layout.fragment_bottom_shape_dialog, null)
         dialog.setContentView(contentView)
         val recyclerView: RecyclerView = contentView.findViewById(R.id.recycler_shape)
         recyclerView.layoutManager = GridLayoutManager(activity, 5)
         recyclerView.adapter = ShapeAdapter(requireContext())
         return dialog
+    }
+
+    fun setListener(listener: ShapeListener) {
+        this.listener = listener
     }
 
     inner class ShapeAdapter(private val context: Context) : RecyclerView.Adapter<ShapeAdapter.ViewHolder>() {
@@ -58,6 +67,12 @@ class ShapeFragment : BottomSheetDialogFragment() {
 
         inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             val textView: TextView = itemView.findViewById(R.id.text_shape)
+            init {
+                itemView.setOnClickListener {
+                    listener?.onClick(shapeList[layoutPosition])
+                    dismiss()
+                }
+            }
         }
 
         private fun convertEmoji(emoji: String): String {
