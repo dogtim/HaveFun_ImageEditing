@@ -3,6 +3,9 @@
 # Abstract
 Users can edit the objects which are images or shapes(rectangle, triangle, circle, etc.), such as add/delete/resize operations on Canvas.
 
+# Prerequisites
+- Android Studio Chipmunk | 2021.2.1
+
 # Features
 1. Add new object in the center of the canvas
 2. Delete any of objects onto canvas
@@ -28,3 +31,7 @@ Please read this article about personality types: [The Type of Team Diversity Yo
 
 1. Which type (Heart, Will, or Head) best describes yourself?  Why?
 2. Describe a previous work situation when you or your group has had a conflict due to different types of people (Heart, Will, or Head), and explain how you handled it.
+
+# Reference
+- [BPCollage](https://github.com/chemickypes/BPCollage)
+- [PhotoEditor](https://github.com/burhanrashid52/PhotoEditor)

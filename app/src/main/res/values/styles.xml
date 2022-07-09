@@ -1,0 +1,10 @@
+<resources>
+
+    <style name="ActionImageView">
+        <item name="android:layout_width">@dimen/top_icon_width</item>
+        <item name="android:layout_height">@dimen/top_icon_width</item>
+        <item name="android:padding">@dimen/top_icon_padding</item>
+        <item name="android:background">@android:color/transparent</item>
+    </style>
+
+</resources>
