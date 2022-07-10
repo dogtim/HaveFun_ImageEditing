@@ -17,6 +17,10 @@ internal class PhotoEditorViewState {
         redoViews = Stack()
     }
 
+    fun clearCurrentSelectedView() {
+        currentSelectedView = null
+    }
+
     fun getAddedView(index: Int): View {
         return addedViews[index]
     }

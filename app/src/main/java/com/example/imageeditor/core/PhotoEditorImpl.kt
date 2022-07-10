@@ -14,11 +14,19 @@ class PhotoEditorImpl(
     private val photoEditorView: PhotoEditorView = builder.photoEditorView
     private val viewState: PhotoEditorViewState = PhotoEditorViewState()
     private val graphicManager: GraphicManager = GraphicManager(builder.photoEditorView, viewState)
+    private val boxHelper: BoxHelper = BoxHelper(builder.photoEditorView, viewState)
 
     override fun addEmoji(emojiTypeface: Typeface?, emojiName: String?) {
         val emoji = Emoji(photoEditorView, viewState, getMultiTouchListener(), graphicManager)
         emoji.buildView(emojiTypeface, emojiName)
-        graphicManager.addView(emoji)
+        addToEditor(emoji)
+    }
+
+    private fun addToEditor(graphic: Graphic) {
+        boxHelper.clear()
+        graphicManager.addView(graphic)
+        // Change the in-focus view
+        viewState.currentSelectedView = graphic.rootView
     }
 
     private fun getMultiTouchListener(): MultiTouchListener {
@@ -43,7 +51,7 @@ class PhotoEditorImpl(
     ) {
         photoEditorView.saveFilter(object : OnSaveBitmap {
             override fun onBitmapReady() {
-                val photoSaverTask = PhotoSaverTask(photoEditorView)
+                val photoSaverTask = PhotoSaverTask(photoEditorView, boxHelper)
                 photoSaverTask.setOnSaveListener(onSaveListener)
                 photoSaverTask.execute(imagePath)
             }

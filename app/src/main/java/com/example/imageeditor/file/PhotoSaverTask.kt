@@ -7,6 +7,7 @@ import android.os.AsyncTask
 import android.text.TextUtils
 import android.util.Log
 import android.view.View
+import com.example.imageeditor.core.BoxHelper
 import com.example.imageeditor.core.PhotoEditor
 import com.example.imageeditor.core.view.OnSaveBitmap
 import com.example.imageeditor.core.view.PhotoEditorView
@@ -15,18 +16,18 @@ import java.io.FileOutputStream
 import java.io.IOException
 
 // TODO Make it to WorkManager
-internal class PhotoSaverTask(photoEditorView: PhotoEditorView) :
+internal class PhotoSaverTask(private val photoEditorView: PhotoEditorView, private val boxHelper: BoxHelper) :
     AsyncTask<String?, String?, PhotoSaverTask.SaveResult>() {
     private var onSaveListener: PhotoEditor.OnSaveListener? = null
     private var onSaveBitmap: OnSaveBitmap? = null
-    private val photoEditorView: PhotoEditorView?
-
-    init {
-        this.photoEditorView = photoEditorView
-    }
 
     fun setOnSaveListener(onSaveListener: PhotoEditor.OnSaveListener?) {
         this.onSaveListener = onSaveListener
+    }
+
+    override fun onPreExecute() {
+        super.onPreExecute()
+        boxHelper.clear()
     }
 
     @SuppressLint("MissingPermission")

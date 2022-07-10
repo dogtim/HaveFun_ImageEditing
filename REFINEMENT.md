@@ -1,6 +1,46 @@
 This project refer to [PhotoEditor](https://github.com/burhanrashid52/PhotoEditor) and do some refine and revise the better codes,
 we keep notes and can contribute in the future.
 
+# Modify 9: Utilize the Scope Functions in Kotlin
+
+```kotlin=
+// Original
+val frmBorder = rootView.findViewById<View>(R.id.editor_border)
+val imgClose = rootView.findViewById<View>(R.id.image_close)
+if (frmBorder != null) {
+    frmBorder.setBackgroundResource(R.drawable.rounded_border_tv)
+    frmBorder.tag = true
+}
+if (imgClose != null) {
+    imgClose.visibility = View.VISIBLE
+}
+```
+```kotlin=
+// Original
+rootView.findViewById<View>(R.id.editor_border)?.let {
+    it.setBackgroundResource(R.drawable.rounded_border_tv)
+    it.tag = true
+}
+rootView.findViewById<View>(R.id.image_close)?.let {
+    it.visibility = View.GONE
+}
+```
+
+# Modify 8: Rename method
+BoxHelper.clearHelperBox()
+
+```kotlin=
+// Original
+internal class BoxHelper() {
+    fun clearHelperBox()
+}
+
+// Better
+internal class BoxHelper() {
+    fun clear()
+}
+```
+
 # Modify 7: The MultiTouchListener is too big
 Original includes the scale/rotate/move codes together
 The events, the data strcuture should be separated to appropriate group

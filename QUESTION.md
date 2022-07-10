@@ -1,6 +1,13 @@
+# Abstract
+Add notes and common question.
+
+## Where is the UITest?
+
+We can refer to this [test](https://github.com/burhanrashid52/PhotoEditor/tree/master/app/src/androidTest/java/com/burhanrashid52/photoediting), it is amazing and a good reference let us study.
+
 ## Please describe the ScaleGestureDetector, RotateGestureDetector, and MoveGestureDetector
 
-TODO, we should compare the components to the impelementation
+TODO, we should compare the components with the impelementation
 
 ## What is the difference between getX and getRawX from MotionEvent?
 - [Android API](https://developer.android.com/reference/android/view/MotionEvent#getRawX())
