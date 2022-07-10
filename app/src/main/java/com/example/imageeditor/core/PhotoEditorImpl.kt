@@ -16,7 +16,7 @@ class PhotoEditorImpl(
     private val viewState: PhotoEditorViewState = PhotoEditorViewState()
 
     override fun addEmoji(emojiTypeface: Typeface?, emojiName: String?) {
-        val emoji = Emoji(photoEditorView, viewState, getMultiTouchListener())
+        val emoji = Emoji(photoEditorView, viewState, getMultiTouchListener(), graphicManager)
         emoji.buildView(emojiTypeface, emojiName)
         graphicManager.addView(emoji)
     }

@@ -7,6 +7,7 @@ import com.example.imageeditor.core.view.PhotoEditorView
 internal class GraphicManager(
     private val photoEditorView: PhotoEditorView
 ) {
+
     fun addView(graphic: Graphic) {
         val view = graphic.rootView
         val params = RelativeLayout.LayoutParams(
@@ -16,4 +17,8 @@ internal class GraphicManager(
         photoEditorView.addView(view, params)
     }
 
+    fun removeView(graphic: Graphic) {
+        val view = graphic.rootView
+        photoEditorView.removeView(view)
+    }
 }

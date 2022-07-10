@@ -11,9 +11,11 @@ import com.example.imageeditor.core.view.PhotoEditorView
 internal class Emoji(
     private val photoEditorView: PhotoEditorView,
     private val viewState: PhotoEditorViewState,
-    private val multiTouchListener: MultiTouchListener
+    private val multiTouchListener: MultiTouchListener,
+    graphicManager: GraphicManager?,
 ) : Graphic(
     context = photoEditorView.context,
+    graphicManager = graphicManager,
     layoutId = R.layout.view_photo_editor_text
 ) {
     private var txtEmoji: TextView? = null
