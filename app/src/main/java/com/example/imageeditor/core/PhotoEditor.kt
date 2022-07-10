@@ -9,6 +9,9 @@ interface PhotoEditor {
 
     fun addEmoji(emojiTypeface: Typeface?, emojiName: String?)
 
+    fun undo(): Boolean
+
+    fun redo(): Boolean
     /**
      * Save the edited image on given path
      *

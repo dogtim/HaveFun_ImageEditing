@@ -12,8 +12,8 @@ class PhotoEditorImpl(
     builder: PhotoEditor.Builder
 ) : PhotoEditor {
     private val photoEditorView: PhotoEditorView = builder.photoEditorView
-    private val graphicManager: GraphicManager = GraphicManager(builder.photoEditorView)
     private val viewState: PhotoEditorViewState = PhotoEditorViewState()
+    private val graphicManager: GraphicManager = GraphicManager(builder.photoEditorView, viewState)
 
     override fun addEmoji(emojiTypeface: Typeface?, emojiName: String?) {
         val emoji = Emoji(photoEditorView, viewState, getMultiTouchListener(), graphicManager)
@@ -26,6 +26,14 @@ class PhotoEditorImpl(
             photoEditorView,
             viewState
         )
+    }
+
+    override fun undo(): Boolean {
+        return graphicManager.undoView()
+    }
+
+    override fun redo(): Boolean {
+        return graphicManager.redoView()
     }
 
     @RequiresPermission(allOf = [Manifest.permission.WRITE_EXTERNAL_STORAGE])

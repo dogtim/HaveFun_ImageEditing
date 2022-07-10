@@ -80,12 +80,12 @@ class MainActivity : AppCompatActivity(), EditorAdapter.OnEditorSelectedListener
 
     override fun onClick(view: View) {
         when (view.id) {
-            R.id.image_undo -> Toast.makeText(this, "Undo", Toast.LENGTH_SHORT).show()
+            R.id.image_undo -> photoEditor?.undo()
             R.id.image_save -> {
                 Toast.makeText(this, "Save", Toast.LENGTH_SHORT).show()
                 saveImage()
             }
-            R.id.image_redo -> Toast.makeText(this, "Redo", Toast.LENGTH_SHORT).show();
+            R.id.image_redo -> photoEditor?.redo()
         }
     }
 
