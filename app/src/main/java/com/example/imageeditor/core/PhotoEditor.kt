@@ -2,12 +2,15 @@ package com.example.imageeditor.core
 
 import android.Manifest
 import android.graphics.Typeface
+import android.net.Uri
 import androidx.annotation.RequiresPermission
 import com.example.imageeditor.core.view.PhotoEditorView
+import java.net.URI
 
 interface PhotoEditor {
 
     fun addEmoji(emojiTypeface: Typeface?, emojiName: String?)
+    fun addImage(uri: Uri)
 
     fun undo(): Boolean
 

@@ -2,6 +2,7 @@ package com.example.imageeditor.core
 
 import android.Manifest
 import android.graphics.Typeface
+import android.net.Uri
 import androidx.annotation.RequiresPermission
 import com.example.imageeditor.core.listener.MultiTouchListener
 import com.example.imageeditor.core.view.OnSaveBitmap
@@ -20,6 +21,12 @@ class PhotoEditorImpl(
         val emoji = Emoji(photoEditorView, viewState, getMultiTouchListener(), graphicManager)
         emoji.buildView(emojiTypeface, emojiName)
         addToEditor(emoji)
+    }
+
+    override fun addImage(uri: Uri) {
+        val photoImage = PhotoImage(photoEditorView, getMultiTouchListener(), viewState, graphicManager)
+        photoImage.buildView(uri)
+        addToEditor(photoImage)
     }
 
     private fun addToEditor(graphic: Graphic) {

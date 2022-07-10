@@ -55,7 +55,7 @@ internal abstract class Graphic(
             it.tag = true
         }
         rootView.findViewById<View>(R.id.image_close)?.let {
-            it.visibility = View.GONE
+            it.visibility = View.VISIBLE
         }
     }
 

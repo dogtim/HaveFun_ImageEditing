@@ -42,7 +42,7 @@ internal class Emoji(
     }
 
     override fun setupView(rootView: View) {
-        txtEmoji = rootView.findViewById(R.id.tvPhotoEditorText)
+        txtEmoji = rootView.findViewById(R.id.text_photo_editor)
         txtEmoji?.run {
             gravity = Gravity.CENTER
             setLayerType(View.LAYER_TYPE_SOFTWARE, null)

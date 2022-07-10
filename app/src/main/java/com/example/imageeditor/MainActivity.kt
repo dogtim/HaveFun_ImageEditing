@@ -1,14 +1,19 @@
 package com.example.imageeditor
 
 import android.Manifest
+import android.R.attr.data
+import android.app.Activity
+import android.content.Intent
 import android.content.pm.PackageManager
+import android.media.Image
 import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresPermission
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.imageeditor.core.PhotoEditor
@@ -16,7 +21,7 @@ import com.example.imageeditor.core.view.PhotoEditorView
 import com.example.imageeditor.file.FileSaveHelper
 import com.example.imageeditor.fragment.ShapeFragment
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import java.lang.Exception
+
 
 class MainActivity : AppCompatActivity(), EditorAdapter.OnEditorSelectedListener,
     ShapeFragment.ShapeListener, View.OnClickListener {
@@ -69,11 +74,25 @@ class MainActivity : AppCompatActivity(), EditorAdapter.OnEditorSelectedListener
             }
 
             ToolType.IMAGE -> {
-                // TODO Create the Image Browser which can select photo from local storage
+                openSomeActivityForResult()
             }
         }
     }
+    fun openSomeActivityForResult() {
+        val intent = Intent()
+        intent.type = "image/*"
+        intent.action = Intent.ACTION_GET_CONTENT
+        resultLauncher.launch(intent)
+    }
 
+    var resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            val selectedImageUri: Uri? = result.data?.data
+            if (null != selectedImageUri) {
+                photoEditor?.addImage(selectedImageUri)
+            }
+        }
+    }
     override fun onClick(emojiUnicode: String) {
         photoEditor?.addEmoji(null, emojiUnicode)
     }
