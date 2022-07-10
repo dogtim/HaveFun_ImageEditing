@@ -4,6 +4,10 @@ import android.Manifest
 import android.graphics.Typeface
 import android.net.Uri
 import androidx.annotation.RequiresPermission
+import com.example.imageeditor.core.graphic.Emoji
+import com.example.imageeditor.core.graphic.Graphic
+import com.example.imageeditor.core.graphic.GraphicManager
+import com.example.imageeditor.core.graphic.PhotoImage
 import com.example.imageeditor.core.listener.MultiTouchListener
 import com.example.imageeditor.core.view.OnSaveBitmap
 import com.example.imageeditor.core.view.PhotoEditorView

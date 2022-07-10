@@ -1,9 +1,10 @@
-package com.example.imageeditor.core
+package com.example.imageeditor.core.graphic
 
 import android.net.Uri
 import android.view.View
 import android.widget.ImageView
 import com.example.imageeditor.R
+import com.example.imageeditor.core.PhotoEditorViewState
 import com.example.imageeditor.core.listener.MultiTouchListener
 import com.example.imageeditor.core.view.PhotoEditorView
 

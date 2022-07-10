@@ -1,7 +1,8 @@
-package com.example.imageeditor.core
+package com.example.imageeditor.core.graphic
 
 import android.view.ViewGroup
 import android.widget.RelativeLayout
+import com.example.imageeditor.core.PhotoEditorViewState
 import com.example.imageeditor.core.view.PhotoEditorView
 
 internal class GraphicManager(
