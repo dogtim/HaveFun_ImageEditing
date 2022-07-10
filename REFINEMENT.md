@@ -1,5 +1,16 @@
-This project refer to [PhotoEditor](https://github.com/burhanrashid52/PhotoEditor) and do some refine and revise the better codes, 
+This project refer to [PhotoEditor](https://github.com/burhanrashid52/PhotoEditor) and do some refine and revise the better codes,
 we keep notes and can contribute in the future.
+
+# Modify 7: The MultiTouchListener is too big
+Original includes the scale/rotate/move codes together
+The events, the data strcuture should be separated to appropriate group
+```kotlin=
+...
+// only be used to scale feature rather than move feature
+private val minimumScale = 0.5f
+private val maximumScale = 10.0f
+...
+```
 
 # Modify 6: Deprecated APIs usage
 ```
@@ -96,6 +107,3 @@ Components:
 1. https://developer.android.com/training/data-storage
    Media Store
    https://developer.android.com/training/data-storage/shared/media
-
-
-

@@ -1,3 +1,7 @@
+## Please describe the ScaleGestureDetector, RotateGestureDetector, and MoveGestureDetector
+
+TODO, we should compare the components to the impelementation
+
 ## What is the difference between getX and getRawX from MotionEvent?
 - [Android API](https://developer.android.com/reference/android/view/MotionEvent#getRawX())
 - [The difference](https://blog.csdn.net/bzlj2912009596/article/details/75043013)

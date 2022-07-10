@@ -7,14 +7,18 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.View.OnTouchListener
 import com.example.imageeditor.core.PhotoEditorViewState
+import com.example.imageeditor.core.scale.ScaleGestureListener
 import com.example.imageeditor.core.view.PhotoEditorView
 
 internal class MultiTouchListener(
     private val photoEditorView: PhotoEditorView,
     private val viewState: PhotoEditorViewState
 ) : OnTouchListener {
-    private val mGestureListener: GestureDetector
+    // To handle the rotate & scale operation
+    private val scaleGestureDetector = ScaleGestureDetector(ScaleGestureListener())
+    private val gestureListener: GestureDetector
     private val isTranslateEnabled = true
+
     private var mActivePointerId = INVALID_POINTER_ID
     private var mPrevX = 0f
     private var mPrevY = 0f
@@ -28,12 +32,13 @@ internal class MultiTouchListener(
     }
 
     init {
-        mGestureListener = GestureDetector(this.photoEditorView.context, GestureListener())
+        gestureListener = GestureDetector(this.photoEditorView.context, GestureListener())
         outRect = Rect(0, 0, 0, 0)
     }
 
     override fun onTouch(view: View, event: MotionEvent): Boolean {
-        mGestureListener.onTouchEvent(event)
+        scaleGestureDetector.onTouchEvent(view, event)
+        gestureListener.onTouchEvent(event)
         if (!isTranslateEnabled) {
             return true
         }
@@ -54,7 +59,9 @@ internal class MultiTouchListener(
                     if (pointerIndexMove != -1) {
                         val currX = event.getX(pointerIndexMove)
                         val currY = event.getY(pointerIndexMove)
-                        adjustTranslation(view, currX - mPrevX, currY - mPrevY)
+                        if (!scaleGestureDetector.isInProgress) {
+                            adjustTranslation(view, currX - mPrevX, currY - mPrevY)
+                        }
                     }
                 }
             MotionEvent.ACTION_CANCEL -> mActivePointerId = INVALID_POINTER_ID
