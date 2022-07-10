@@ -1,11 +1,9 @@
 package com.example.imageeditor
 
 import android.Manifest
-import android.R.attr.data
 import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.media.Image
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
@@ -16,12 +14,12 @@ import androidx.annotation.RequiresPermission
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.example.imageeditor.file.OnSaveListener
 import com.example.imageeditor.core.PhotoEditor
 import com.example.imageeditor.core.view.PhotoEditorView
 import com.example.imageeditor.file.FileSaveHelper
 import com.example.imageeditor.fragment.ShapeFragment
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-
 
 class MainActivity : AppCompatActivity(), EditorAdapter.OnEditorSelectedListener,
     ShapeFragment.ShapeListener, View.OnClickListener {
@@ -38,8 +36,7 @@ class MainActivity : AppCompatActivity(), EditorAdapter.OnEditorSelectedListener
         photoEditorView = findViewById(R.id.photoEditorView)
 
         photoEditor = photoEditorView?.run {
-            PhotoEditor.Builder(this)
-                .build() // build photo editor sdk
+            PhotoEditor(this)
         }
         fileSaveHelper = FileSaveHelper(this)
         initRecycleView()
@@ -132,7 +129,7 @@ class MainActivity : AppCompatActivity(), EditorAdapter.OnEditorSelectedListener
 
                         photoEditor?.saveAsFile(
                             filePath,
-                            object : PhotoEditor.OnSaveListener {
+                            object : OnSaveListener {
                                 override fun onSuccess(imagePath: String) {
                                     fileSaveHelper?.notifyThatFileIsNowPubliclyAvailable(
                                         contentResolver

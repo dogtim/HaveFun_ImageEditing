@@ -8,7 +8,6 @@ import android.text.TextUtils
 import android.util.Log
 import android.view.View
 import com.example.imageeditor.core.BoxHelper
-import com.example.imageeditor.core.PhotoEditor
 import com.example.imageeditor.core.view.OnSaveBitmap
 import com.example.imageeditor.core.view.PhotoEditorView
 import java.io.File
@@ -18,10 +17,10 @@ import java.io.IOException
 // TODO Make it to WorkManager
 internal class PhotoSaverTask(private val photoEditorView: PhotoEditorView, private val boxHelper: BoxHelper) :
     AsyncTask<String?, String?, PhotoSaverTask.SaveResult>() {
-    private var onSaveListener: PhotoEditor.OnSaveListener? = null
+    private var onSaveListener: OnSaveListener? = null
     private var onSaveBitmap: OnSaveBitmap? = null
 
-    fun setOnSaveListener(onSaveListener: PhotoEditor.OnSaveListener?) {
+    fun setOnSaveListener(onSaveListener: OnSaveListener?) {
         this.onSaveListener = onSaveListener
     }
 
