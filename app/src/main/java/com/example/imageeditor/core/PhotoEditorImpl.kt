@@ -3,6 +3,7 @@ package com.example.imageeditor.core
 import android.Manifest
 import android.graphics.Typeface
 import androidx.annotation.RequiresPermission
+import com.example.imageeditor.core.listener.MultiTouchListener
 import com.example.imageeditor.core.view.OnSaveBitmap
 import com.example.imageeditor.core.view.PhotoEditorView
 import com.example.imageeditor.file.PhotoSaverTask
@@ -12,10 +13,19 @@ class PhotoEditorImpl(
 ) : PhotoEditor {
     private val photoEditorView: PhotoEditorView = builder.photoEditorView
     private val graphicManager: GraphicManager = GraphicManager(builder.photoEditorView)
+    private val viewState: PhotoEditorViewState = PhotoEditorViewState()
+
     override fun addEmoji(emojiTypeface: Typeface?, emojiName: String?) {
-        val emoji = Emoji(photoEditorView)
+        val emoji = Emoji(photoEditorView, viewState, getMultiTouchListener())
         emoji.buildView(emojiTypeface, emojiName)
         graphicManager.addView(emoji)
+    }
+
+    private fun getMultiTouchListener(): MultiTouchListener {
+        return MultiTouchListener(
+            photoEditorView,
+            viewState
+        )
     }
 
     @RequiresPermission(allOf = [Manifest.permission.WRITE_EXTERNAL_STORAGE])
