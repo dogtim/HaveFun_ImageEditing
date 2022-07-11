@@ -15,6 +15,7 @@ import java.io.FileOutputStream
 import java.io.IOException
 
 // TODO Make it to WorkManager
+@Deprecated("Legacy async solution")
 internal class PhotoSaverTask(private val photoEditorView: PhotoEditorView, private val boxHelper: BoxHelper) :
     AsyncTask<String?, String?, PhotoSaverTask.SaveResult>() {
     private var onSaveListener: OnSaveListener? = null
@@ -24,6 +25,7 @@ internal class PhotoSaverTask(private val photoEditorView: PhotoEditorView, priv
         this.onSaveListener = onSaveListener
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onPreExecute() {
         super.onPreExecute()
         boxHelper.clear()
@@ -47,14 +49,12 @@ internal class PhotoSaverTask(private val photoEditorView: PhotoEditorView, priv
         val file = File(mImagePath)
         return try {
             val out = FileOutputStream(file, false)
-            if (photoEditorView != null) {
-                val capturedBitmap = buildBitmap()
-                capturedBitmap?.compress(
-                    Bitmap.CompressFormat.PNG,
-                    100,
-                    out
-                )
-            }
+            val capturedBitmap = buildBitmap()
+            capturedBitmap?.compress(
+                Bitmap.CompressFormat.PNG,
+                100,
+                out
+            )
             out.flush()
             out.close()
             Log.d(TAG, "Filed Saved Successfully")
@@ -70,6 +70,7 @@ internal class PhotoSaverTask(private val photoEditorView: PhotoEditorView, priv
         return captureView(photoEditorView)
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onPostExecute(saveResult: SaveResult) {
         super.onPostExecute(saveResult)
         if (TextUtils.isEmpty(saveResult.mImagePath)) {
