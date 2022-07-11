@@ -42,7 +42,7 @@ internal class Emoji(
         }
     }
 
-    override fun setupView(rootView: View) {
+    override fun setupView() {
         txtEmoji = rootView.findViewById(R.id.text_photo_editor)
         txtEmoji?.run {
             gravity = Gravity.CENTER

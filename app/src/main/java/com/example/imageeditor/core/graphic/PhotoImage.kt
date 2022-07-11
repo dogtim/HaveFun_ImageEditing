@@ -20,6 +20,10 @@ internal class PhotoImage(
 ) {
     private var imageView: ImageView? = null
 
+    init {
+        setupGesture()
+    }
+
     fun buildView(uri: Uri) {
         imageView?.setImageURI(uri)
     }
@@ -31,11 +35,8 @@ internal class PhotoImage(
         rootView.setOnTouchListener(multiTouchListener)
     }
 
-    override fun setupView(rootView: View) {
+    override fun setupView() {
         imageView = rootView.findViewById(R.id.image_photo_editor)
     }
 
-    init {
-        setupGesture()
-    }
 }

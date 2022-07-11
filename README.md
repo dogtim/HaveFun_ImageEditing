@@ -148,7 +148,7 @@ internal class MultiTouchListener {
 ```
 
 #### How to export the decorated image?
-```kotlin=
+```kotlin
 // Set the below listener to Graphic
 class MainActivity {
     // Step 1: Create the URI of Image File

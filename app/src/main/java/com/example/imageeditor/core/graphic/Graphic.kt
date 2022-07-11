@@ -19,11 +19,11 @@ internal abstract class Graphic(
     val rootView: View = LayoutInflater.from(context).inflate(layoutId, null)
 
     init {
-        setupView(rootView)
-        setupRemoveView(rootView)
+        setupView()
+        setupRemoveView()
     }
 
-    private fun setupRemoveView(rootView: View) {
+    private fun setupRemoveView() {
         rootView.findViewById<ImageView>(R.id.image_close)?.setOnClickListener {
             graphicManager?.removeView(this@Graphic)
         }
@@ -48,7 +48,7 @@ internal abstract class Graphic(
         }
     }
 
-    protected fun toggleSelection() {
+    private fun toggleSelection() {
         rootView.findViewById<View>(R.id.editor_border)?.let {
             it.setBackgroundResource(R.drawable.rounded_border_tv)
             it.tag = true
@@ -58,5 +58,5 @@ internal abstract class Graphic(
         }
     }
 
-    open fun setupView(rootView: View) {}
+    open fun setupView() {}
 }
