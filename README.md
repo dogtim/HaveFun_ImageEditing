@@ -1,7 +1,13 @@
 # Have Fun Image Editing
 
 # Abstract
-Users can edit the objects which are images or shapes(rectangle, triangle, circle, etc.), such as add/delete/resize operations on Canvas.
+Users can edit the objects which are images or shapes, such as add/delete/resize operations on Canvas. This project is inspired from - [PhotoEditor](https://github.com/burhanrashid52/PhotoEditor)
+
+There are two important documents to me are
+1. QUESTION.md
+  - The notes help me to figure out the obfuscate & confusion about some components. As starting the thinking, you have the conscious to deep dive more
+2. REFINEMENT.md
+  - The notes keep the refinement and better coding habbit should use to. It is not a critism for the original project, as a developer, we should always find better way and consice, clean way to move on.
 
 # Prerequisites
 - Android Studio Chipmunk | 2021.2.1
@@ -14,23 +20,32 @@ Users can edit the objects which are images or shapes(rectangle, triangle, circl
 5. Can undo and redo, user could undo deleting or adding object
 6. Export and share as images.
 
-# Requirements
-1. Record the steps of how you complete this project using git, and send us the result using following command: git bundle create repo.bundle --all
+# Architecture & Philosophy
+## Idea
+The simple Photo editing project differs from other browsing apps that get data from remote storage. Here is a list that demos the [MVVM/MVC/MVP](https://github.com/android/architecture-samples) from Google's Open Source project. You can checkout to different branches and find out the appropriate architecture pattern.
 
-2. Please demonstrate the OOP principles and component design in ways you are familiar with. You can use any of the architecture including but not limited to Android MVVM.
+To start the project by the old one, the very traditional architecture
 
-3. Please write a document (.doc or .md) or directly add your answer in this document in English, which should include:
-  What's the overall architecture? What are the major components? Please explain them individually.
+### MVC
+No matter the architecture you pick up, you should follow the S.O.L.I.D pattern. This is more important than pursuing the "best" architecture pattern.
 
-4. In the process of implementing this app, you might have different design decisions in your mind, share your thoughts and explain why you made that decision.
+### WHY?
+In photo editing, there is a trick thought inside the design. The VIEW is sometimes the DATA, and vice versa. We operate the VIEW to form a DATA and then generate the new VIEW.
 
-# Personality
-Problem: Heart, Will, or Head
+For example:
+The user can move the VIEW(Shape or PhotoImage) on the canvas. The VIEW does not change any appearance but the position only, and its positions (x and y) held by this VIEW
 
-Please read this article about personality types: [The Type of Team Diversity You’re Probably Not Paying Attention To](https://docs.google.com/document/d/1uIz1D72DcthD8SNAEE_Lzw23CfpSUI1zL1SdMFzu9jw/edit)
+> Gesture -> VIEW -> VIEW(Internal Data, such as x, y)
 
-1. Which type (Heart, Will, or Head) best describes yourself?  Why?
-2. Describe a previous work situation when you or your group has had a conflict due to different types of people (Heart, Will, or Head), and explain how you handled it.
+It is very different from the common use cases in MVVM
+
+> Gesture -> VIEW(Click request) -> ViewModel -> Repository -> (Remote or Local)
+
+### Components
+Please demonstrate the OOP principles and component design in ways you are familiar with. You can use any of the architecture including but not limited to Android MVVM.
+The whole sketch of class and components will update [here](https://app.diagrams.net/#G1z8-ujAls_4BCl_PveP2SQTaGk8Po57jR)
+
+
 
 # Reference
 - [BPCollage](https://github.com/chemickypes/BPCollage)
