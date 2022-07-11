@@ -45,9 +45,6 @@ internal abstract class Graphic(
                 viewState.currentSelectedView = rootView
             }
 
-            override fun onLongClick() {
-
-            }
         }
     }
 

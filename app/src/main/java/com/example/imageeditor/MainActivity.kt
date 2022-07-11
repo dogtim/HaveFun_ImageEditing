@@ -71,25 +71,25 @@ class MainActivity : AppCompatActivity(), EditorAdapter.OnEditorSelectedListener
             }
 
             ToolType.IMAGE -> {
-                openSomeActivityForResult()
+                launchGalleryApp()
             }
         }
     }
-    fun openSomeActivityForResult() {
+    private fun launchGalleryApp() {
         val intent = Intent()
         intent.type = "image/*"
         intent.action = Intent.ACTION_GET_CONTENT
         resultLauncher.launch(intent)
     }
 
-    var resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+    private var resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
-            val selectedImageUri: Uri? = result.data?.data
-            if (null != selectedImageUri) {
-                photoEditor?.addImage(selectedImageUri)
+            result.data?.data?.let {
+                photoEditor?.addImage(it)
             }
         }
     }
+
     override fun onClick(emojiUnicode: String) {
         photoEditor?.addEmoji(null, emojiUnicode)
     }
