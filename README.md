@@ -51,7 +51,7 @@ Please demonstrate the OOP principles and component design in ways you are famil
 The whole sketch of class and components will update [here](https://app.diagrams.net/#G1z8-ujAls_4BCl_PveP2SQTaGk8Po57jR)
 
 The key class is PhotoEditor, it provides most of entry point when user operate the items on the `PhotoEditorView`
-```kotlin=
+```kotlin
 class PhotoEditor (
     private val photoEditorView: PhotoEditorView
 )
@@ -70,7 +70,7 @@ private val boxHelper: BoxHelper = BoxHelper(photoEditorView, viewState)
 
 #### How to add Emoji and Photo?
 The relationships between PhotoEditor & (Emoji/Photo)
-```kotlin=
+```kotlin
 // To define the common interface, such as setup listener
 internal abstract class Graphic(...)
 
@@ -85,7 +85,7 @@ photoEditor.addImage()
 ```
 
 Emoji's data comes from
-```kotlin=
+```kotlin
 ShapeAdapter() {
     private val shapeList: ArrayList<String> by lazy {
         ...
@@ -96,7 +96,7 @@ ShapeAdapter() {
 ```
 
 photo data comes from other App such as google photo
-```kotlin=
+```kotlin
 private var resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
     if (result.resultCode == Activity.RESULT_OK) {
         result.data?.data?.let {
@@ -107,7 +107,7 @@ private var resultLauncher = registerForActivityResult(ActivityResultContracts.S
 ```
 
 #### How to handle the undo/redo?
-```kotlin=
+```kotlin
 // Data structure in PhotoEditorViewState class
 class PhotoEditorViewState {
     var currentSelectedView: View? = null
@@ -126,7 +126,7 @@ internal class GraphicManager {
 
 #### How to remove Graphic such as Emoji & PhotoImage?
 They can remove its self by adding specified ImageView
-```kotlin=
+```kotlin
 internal abstract class Graphic {
     private fun setupRemoveView(rootView: View) {
         rootView.findViewById<ImageView>(R.id.image_close)?.setOnClickListener {
@@ -137,7 +137,7 @@ internal abstract class Graphic {
 ```
 
 #### How to scale & move the graphic?
-```kotlin=
+```kotlin
 // Set the below listener to Graphic
 internal class MultiTouchListener {
     override fun onTouch(view: View, event: MotionEvent): Boolean {
