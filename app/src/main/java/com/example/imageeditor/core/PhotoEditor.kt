@@ -10,7 +10,7 @@ import com.example.imageeditor.core.listener.MultiTouchListener
 import com.example.imageeditor.core.view.PhotoEditorView
 
 class PhotoEditor (
-    private val photoEditorView: PhotoEditorView
+    val photoEditorView: PhotoEditorView
 )  {
     private val viewState: PhotoEditorViewState = PhotoEditorViewState()
     private val graphicManager: GraphicManager = GraphicManager(photoEditorView, viewState)
