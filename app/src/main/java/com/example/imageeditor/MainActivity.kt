@@ -24,8 +24,7 @@ import com.example.imageeditor.file.PhotoSaverViewModel
 import com.example.imageeditor.fragment.ShapeFragment
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
-class MainActivity : AppCompatActivity(), EditorAdapter.OnEditorSelectedListener,
-    ShapeFragment.ShapeListener, View.OnClickListener {
+class MainActivity : AppCompatActivity(), EditorAdapter.OnEditorSelectedListener, View.OnClickListener {
     private lateinit var shapeFragment: ShapeFragment
     private lateinit var photoEditor: PhotoEditor
     private lateinit var fileSaveHelper: FileSaveHelper
@@ -36,7 +35,11 @@ class MainActivity : AppCompatActivity(), EditorAdapter.OnEditorSelectedListener
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         shapeFragment = ShapeFragment()
-        shapeFragment.setListener(this)
+        shapeFragment.setListener(object: ShapeFragment.ShapeListener {
+            override fun onClick(emojiUnicode: String) {
+                photoEditor.addEmoji(null, emojiUnicode)
+            }
+        })
 
         photoEditor = PhotoEditor(findViewById(R.id.photoEditorView))
         loadingView = findViewById(R.id.progress_loading)
@@ -117,10 +120,6 @@ class MainActivity : AppCompatActivity(), EditorAdapter.OnEditorSelectedListener
                 }
             }
         }
-
-    override fun onClick(emojiUnicode: String) {
-        photoEditor.addEmoji(null, emojiUnicode)
-    }
 
     override fun onClick(view: View) {
         when (view.id) {
