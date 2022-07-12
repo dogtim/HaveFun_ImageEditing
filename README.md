@@ -27,6 +27,7 @@ There are two important documents to me are
 ## Android Components
 - Lifecycle-aware components
   - ViewModel
+  - LiveData
 - Layout
   - Activity
   - BottomSheetDialogFragment

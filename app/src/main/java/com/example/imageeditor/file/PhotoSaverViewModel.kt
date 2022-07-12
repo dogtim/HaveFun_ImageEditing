@@ -12,7 +12,6 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import java.io.File
 import java.io.FileOutputStream
-import java.io.IOException
 
 enum class PhotoSaverStatus { LOADING, ERROR, DONE }
 
@@ -42,7 +41,9 @@ class PhotoSaverViewModel : ViewModel() {
         viewModelScope.launch {
             _status.value = PhotoSaverStatus.LOADING
             val file = File(path)
-            try {
+            // https://stackoverflow.com/questions/58680028/how-to-make-inappropriate-blocking-method-call-appropriate
+            // To replace try, catch with runCatching for figuring out the lint problem
+            runCatching {
                 val out = FileOutputStream(file, false)
                 val capturedBitmap = getBitmap(view)
                 capturedBitmap.compress(
@@ -53,8 +54,8 @@ class PhotoSaverViewModel : ViewModel() {
                 out.flush()
                 out.close()
                 _status.value = PhotoSaverStatus.DONE
-            } catch (e: IOException) {
-                e.printStackTrace()
+            }.onFailure {
+                it.printStackTrace()
                 _status.value = PhotoSaverStatus.ERROR
             }
         }
