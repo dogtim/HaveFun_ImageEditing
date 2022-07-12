@@ -4,15 +4,15 @@
 Users can edit the objects which are images or shapes, such as add/delete/resize operations on Canvas. This project is inspired from - [PhotoEditor](https://github.com/burhanrashid52/PhotoEditor)
 
 There are two important documents to me are
-1. QUESTION.md
+1. [QUESTION.md](QUESTION.md)
 - The notes help me to figure out the obfuscate & confusion about some components. As starting the thinking, you have the conscious to deep dive more
-2. REFINEMENT.md
+2. [REFINEMENT.md](REFINEMENT.md)
 - The notes keep the refinement and better coding habbit should use to. It is not a critism for the original project, as a developer, we should always find better way and consice, clean way to move on.
 
 # Prerequisites
 - Android Studio Chipmunk | 2021.2.1
 - Please check the SDK path of local.properties is set to correct. (It might not be changed as the IDE sometime wrong)
-    - Android-Studio -> Preferences -> Android SDK Location
+  - Android-Studio -> Preferences -> Android SDK Location
 
 
 # Features
@@ -24,6 +24,14 @@ There are two important documents to me are
 6. Export and share as images.
 
 # Architecture & Philosophy
+## Android Components
+- Lifecycle-aware components
+  - ViewModel
+- Layout
+  - Activity
+  - BottomSheetDialogFragment
+  - RecyclerView.Adapter
+- Permission
 ## Idea
 The simple Photo editing project differs from other browsing apps that get data from remote storage. Here is a list that demos the [MVVM/MVC/MVP](https://github.com/android/architecture-samples) from Google's Open Source project. You can checkout to different branches and find out the appropriate architecture pattern.
 
@@ -53,7 +61,7 @@ The whole sketch of class and components will update [here](https://app.diagrams
 The key class is PhotoEditor, it provides most of entry point when user operate the items on the `PhotoEditorView`
 ```kotlin
 class PhotoEditor (
-    private val photoEditorView: PhotoEditorView
+  private val photoEditorView: PhotoEditorView
 )
 // To keep the stack and arraylist of operated Graphic
 private val viewState: PhotoEditorViewState = PhotoEditorViewState()
@@ -66,7 +74,7 @@ private val boxHelper: BoxHelper = BoxHelper(photoEditorView, viewState)
 `PhotoEditorView`
 - It is a RelativeLayout and any user actions such as adding or moving view operating on this layout
 - Output file by this view's bitmap
-    - PhotoSaverTask.captureView
+  - PhotoSaverTask.captureView
 
 #### How to add Emoji and Photo?
 The relationships between PhotoEditor & (Emoji/Photo)
@@ -87,22 +95,22 @@ photoEditor.addImage()
 Emoji's data comes from
 ```kotlin
 ShapeAdapter() {
-    private val shapeList: ArrayList<String> by lazy {
-        ...
-        val emojiList = context.resources.getStringArray(R.array.photo_editor_emoji)
-        ...
-    }
+  private val shapeList: ArrayList<String> by lazy {
+    ...
+    val emojiList = context.resources.getStringArray(R.array.photo_editor_emoji)
+    ...
+  }
 }
 ```
 
 photo data comes from other App such as google photo
 ```kotlin
 private var resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-    if (result.resultCode == Activity.RESULT_OK) {
-        result.data?.data?.let {
-            photoEditor?.addImage(it)
-        }
+  if (result.resultCode == Activity.RESULT_OK) {
+    result.data?.data?.let {
+      photoEditor?.addImage(it)
     }
+  }
 }
 ```
 
@@ -110,16 +118,16 @@ private var resultLauncher = registerForActivityResult(ActivityResultContracts.S
 ```kotlin
 // Data structure in PhotoEditorViewState class
 class PhotoEditorViewState {
-    var currentSelectedView: View? = null
-    private val addedViews: MutableList<View>
-    private val redoViews: Stack<View>
-    ...
+  var currentSelectedView: View? = null
+  private val addedViews: MutableList<View>
+  private val redoViews: Stack<View>
+  ...
 }
 
 // The operator is GraphicManager
 internal class GraphicManager {
-    fun undoView(): Boolean
-    fun redoView(): Boolean
+  fun undoView(): Boolean
+  fun redoView(): Boolean
 }
 
 ```
@@ -128,11 +136,11 @@ internal class GraphicManager {
 They can remove its self by adding specified ImageView
 ```kotlin
 internal abstract class Graphic {
-    private fun setupRemoveView(rootView: View) {
-        rootView.findViewById<ImageView>(R.id.image_close)?.setOnClickListener {
-            graphicManager?.removeView(this@Graphic)
-        }
+  private fun setupRemoveView(rootView: View) {
+    rootView.findViewById<ImageView>(R.id.image_close)?.setOnClickListener {
+      graphicManager?.removeView(this@Graphic)
     }
+  }
 }
 ```
 
@@ -140,10 +148,10 @@ internal abstract class Graphic {
 ```kotlin
 // Set the below listener to Graphic
 internal class MultiTouchListener {
-    override fun onTouch(view: View, event: MotionEvent): Boolean {
-        // The complexity implementation, but if you meet some troubles on interaction, 
-        // you may find the buggy from this block, it might be the most of root cause
-    }
+  override fun onTouch(view: View, event: MotionEvent): Boolean {
+    // The complexity implementation, but if you meet some troubles on interaction, 
+    // you may find the buggy from this block, it might be the most of root cause
+  }
 }
 ```
 
@@ -151,11 +159,11 @@ internal class MultiTouchListener {
 ```kotlin
 // Set the below listener to Graphic
 class MainActivity {
-    // Step 1: Create the URI of Image File
-    // Step 2: Generate the image file and save to this URI
-    private fun saveImage() {
-        ....
-    }
+  // Step 1: Create the URI of Image File
+  // Step 2: Generate the image file and save to this URI
+  private fun saveImage() {
+    ....
+  }
 }
 ```
 
