@@ -6,18 +6,21 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.annotation.RequiresPermission
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import com.example.imageeditor.file.OnSaveListener
 import com.example.imageeditor.core.PhotoEditor
 import com.example.imageeditor.core.view.PhotoEditorView
 import com.example.imageeditor.file.FileSaveHelper
+import com.example.imageeditor.file.PhotoSaverStatus
+import com.example.imageeditor.file.PhotoSaverViewModel
 import com.example.imageeditor.fragment.ShapeFragment
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
@@ -27,6 +30,7 @@ class MainActivity : AppCompatActivity(), EditorAdapter.OnEditorSelectedListener
     var photoEditor: PhotoEditor? = null
     private var photoEditorView: PhotoEditorView? = null
     private var fileSaveHelper: FileSaveHelper? = null
+    private val viewModel: PhotoSaverViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,6 +45,23 @@ class MainActivity : AppCompatActivity(), EditorAdapter.OnEditorSelectedListener
         fileSaveHelper = FileSaveHelper(this)
         initRecycleView()
         initImageView()
+
+        viewModel.status.observe(this) { status ->
+            when (status) {
+                PhotoSaverStatus.DONE -> {
+                    // You should execute below to make the output into photo content provider
+                    fileSaveHelper?.notifyThatFileIsNowPubliclyAvailable(
+                        contentResolver
+                    )
+                }
+                PhotoSaverStatus.ERROR -> {
+
+                }
+                PhotoSaverStatus.LOADING -> {
+                    photoEditor?.boxHelper?.clear()
+                }
+            }
+        }
     }
 
     private fun initRecycleView() {
@@ -75,6 +96,7 @@ class MainActivity : AppCompatActivity(), EditorAdapter.OnEditorSelectedListener
             }
         }
     }
+
     private fun launchGalleryApp() {
         val intent = Intent()
         intent.type = "image/*"
@@ -82,13 +104,14 @@ class MainActivity : AppCompatActivity(), EditorAdapter.OnEditorSelectedListener
         resultLauncher.launch(intent)
     }
 
-    private var resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-        if (result.resultCode == Activity.RESULT_OK) {
-            result.data?.data?.let {
-                photoEditor?.addImage(it)
+    private var resultLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                result.data?.data?.let {
+                    photoEditor?.addImage(it)
+                }
             }
         }
-    }
 
     override fun onClick(emojiUnicode: String) {
         photoEditor?.addEmoji(null, emojiUnicode)
@@ -117,7 +140,6 @@ class MainActivity : AppCompatActivity(), EditorAdapter.OnEditorSelectedListener
         ) == PackageManager.PERMISSION_GRANTED
         if (hasStoragePermission || FileSaveHelper.isSdkHigherThan28()) {
             fileSaveHelper?.createFile(fileName, object : FileSaveHelper.OnFileCreateResult {
-
                 @RequiresPermission(allOf = [Manifest.permission.WRITE_EXTERNAL_STORAGE])
                 override fun onFileCreateResult(
                     created: Boolean,
@@ -126,27 +148,7 @@ class MainActivity : AppCompatActivity(), EditorAdapter.OnEditorSelectedListener
                     uri: Uri?
                 ) {
                     if (created && filePath != null) {
-
-                        photoEditor?.saveAsFile(
-                            filePath,
-                            object : OnSaveListener {
-                                override fun onSuccess(imagePath: String) {
-                                    fileSaveHelper?.notifyThatFileIsNowPubliclyAvailable(
-                                        contentResolver
-                                    )
-                                    // hideLoading()
-                                    // showSnackbar("Image Saved Successfully")
-                                    // photoEditor?.source?.setImageURI(uri)
-                                }
-
-                                override fun onFailure(exception: Exception) {
-                                     // hideLoading()
-                                    // showSnackbar("Failed to save Image")
-                                }
-                            })
-                    } else {
-                        // hideLoading()
-                        // error?.let { showSnackbar(error) }
+                        viewModel.save(filePath, photoEditorView!!)
                     }
                 }
             })

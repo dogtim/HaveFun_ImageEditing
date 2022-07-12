@@ -6,7 +6,7 @@ import android.widget.ImageView
 import com.example.imageeditor.R
 import com.example.imageeditor.core.view.PhotoEditorView
 
-internal class BoxHelper(
+class BoxHelper(
     private val photoEditorView: PhotoEditorView,
     private val viewState: PhotoEditorViewState
 ) {
