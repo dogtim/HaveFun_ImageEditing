@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
@@ -29,6 +30,7 @@ class MainActivity : AppCompatActivity(), EditorAdapter.OnEditorSelectedListener
     private lateinit var photoEditor: PhotoEditor
     private lateinit var fileSaveHelper: FileSaveHelper
     private val viewModel: PhotoSaverViewModel by viewModels()
+    private lateinit var loadingView: ProgressBar
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,22 +39,28 @@ class MainActivity : AppCompatActivity(), EditorAdapter.OnEditorSelectedListener
         shapeFragment.setListener(this)
 
         photoEditor = PhotoEditor(findViewById(R.id.photoEditorView))
+        loadingView = findViewById(R.id.progress_loading)
         fileSaveHelper = FileSaveHelper(this)
         initRecycleView()
         initImageView()
+        initViewModel()
+    }
 
+    private fun initViewModel() {
         viewModel.status.observe(this) { status ->
             when (status) {
                 PhotoSaverStatus.DONE -> {
+                    loadingView.visibility = View.GONE
                     // You should execute below to make the output into photo content provider
                     fileSaveHelper.notifyThatFileIsNowPubliclyAvailable(
                         contentResolver
                     )
                 }
                 PhotoSaverStatus.ERROR -> {
-
+                    loadingView.visibility = View.GONE
                 }
                 PhotoSaverStatus.LOADING -> {
+                    loadingView.visibility = View.VISIBLE
                     photoEditor.boxHelper.clear()
                 }
                 else -> {
@@ -61,7 +69,6 @@ class MainActivity : AppCompatActivity(), EditorAdapter.OnEditorSelectedListener
             }
         }
     }
-
     private fun initRecycleView() {
         val recyclerView: RecyclerView = findViewById(R.id.recycler_editing_tools)
         recyclerView.adapter = EditorAdapter(this)
@@ -131,6 +138,7 @@ class MainActivity : AppCompatActivity(), EditorAdapter.OnEditorSelectedListener
     // Step 1: Create the URI of Image File
     // Step 2: Generate the image file and save to this URI
     private fun saveImage() {
+        loadingView.visibility = View.VISIBLE
         val fileName = System.currentTimeMillis().toString() + ".png"
         val hasStoragePermission = ContextCompat.checkSelfPermission(
             this,
