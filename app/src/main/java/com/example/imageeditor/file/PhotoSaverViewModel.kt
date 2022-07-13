@@ -13,13 +13,14 @@ import kotlinx.coroutines.launch
 import java.io.File
 import java.io.FileOutputStream
 
+
 enum class PhotoSaverStatus { LOADING, ERROR, DONE }
 
 class PhotoSaverViewModel : ViewModel() {
 
     private val _status = MutableLiveData<PhotoSaverStatus>()
     val status: LiveData<PhotoSaverStatus> = _status
-
+    private val scale = 1.0f
     private fun getBitmap(view: View): Bitmap {
         val bitmap = Bitmap.createBitmap(
             view.width,
@@ -27,7 +28,12 @@ class PhotoSaverViewModel : ViewModel() {
             Bitmap.Config.ARGB_8888
         )
         view.draw(Canvas(bitmap))
-        return bitmap
+
+        return if (scale.equals(1.0f)) {
+            bitmap
+        } else {
+            ScalingUtility().createScaledBitmap(bitmap, (view.width * scale).toInt(), (view.height * scale).toInt(), ScalingUtility.ScalingLogic.FIT)
+        }
     }
 
     /**
