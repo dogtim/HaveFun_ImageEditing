@@ -25,9 +25,10 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 class MainActivity : AppCompatActivity(), EditorAdapter.OnEditorSelectedListener, View.OnClickListener {
     private lateinit var shapeFragment: ShapeFragment
     private lateinit var photoEditor: PhotoEditor
+
     private val viewModel: PhotoSaverViewModel by viewModels {
         PhotoSaverViewModel.PhotoSaverViewFactor(
-            FileSaveHelper(this)
+            FileSaveHelper(contentResolver)
         )
     }
     private lateinit var loadingView: ProgressBar
@@ -140,9 +141,7 @@ class MainActivity : AppCompatActivity(), EditorAdapter.OnEditorSelectedListener
             Manifest.permission.WRITE_EXTERNAL_STORAGE
         ) == PackageManager.PERMISSION_GRANTED
         if (hasStoragePermission || FileSaveHelper.isSdkHigherThan28()) {
-            viewModel.exportFile(fileName, photoEditor.photoEditorView) {
-                contentResolver
-            }
+            viewModel.exportFile(fileName, photoEditor.photoEditorView)
         } else {
             // requestPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
         }
