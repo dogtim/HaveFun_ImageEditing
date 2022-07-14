@@ -1,14 +1,19 @@
 package com.example.imageeditor.file
 
 import android.Manifest
+import android.content.ContentResolver
+import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
+import android.net.Uri
 import android.view.View
 import androidx.annotation.RequiresPermission
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.imageeditor.core.view.PhotoEditorView
 import kotlinx.coroutines.launch
 import java.io.File
 import java.io.FileOutputStream
@@ -17,6 +22,7 @@ import java.io.FileOutputStream
 enum class PhotoSaverStatus { LOADING, ERROR, DONE }
 
 class PhotoSaverViewModel : ViewModel() {
+    private lateinit var fileSaveHelper: FileSaveHelper
 
     private val _status = MutableLiveData<PhotoSaverStatus>()
     val status: LiveData<PhotoSaverStatus> = _status
@@ -43,7 +49,7 @@ class PhotoSaverViewModel : ViewModel() {
      * @param view generate the bitmap from this view
      */
     @RequiresPermission(allOf = [Manifest.permission.WRITE_EXTERNAL_STORAGE])
-    fun save(path: String, view: View) {
+    private fun save(path: String, view: View, result: () -> ContentResolver) {
         viewModelScope.launch {
             _status.value = PhotoSaverStatus.LOADING
             val file = File(path)
@@ -59,6 +65,10 @@ class PhotoSaverViewModel : ViewModel() {
                 )
                 out.flush()
                 out.close()
+                // You should execute below to make the output into photo content provider
+                fileSaveHelper.notifyThatFileIsNowPubliclyAvailable(
+                    result()
+                )
                 _status.value = PhotoSaverStatus.DONE
             }.onFailure {
                 it.printStackTrace()
@@ -66,5 +76,27 @@ class PhotoSaverViewModel : ViewModel() {
             }
         }
 
+    }
+
+    fun set(activity: AppCompatActivity) {
+        fileSaveHelper = FileSaveHelper(activity)
+    }
+
+    fun creatFile(fileName: String, photoEditorView: PhotoEditorView, result: () -> ContentResolver) {
+        fileSaveHelper.createFile(fileName, object : FileSaveHelper.OnFileCreateResult {
+            @RequiresPermission(allOf = [Manifest.permission.WRITE_EXTERNAL_STORAGE])
+            override fun onFileCreateResult(
+                created: Boolean,
+                filePath: String?,
+                error: String?,
+                uri: Uri?
+            ) {
+                if (created && filePath != null) {
+                    save(filePath, photoEditorView) {
+                        result()
+                    }
+                }
+            }
+        })
     }
 }

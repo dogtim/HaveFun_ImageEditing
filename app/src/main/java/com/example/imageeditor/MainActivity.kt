@@ -27,7 +27,6 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 class MainActivity : AppCompatActivity(), EditorAdapter.OnEditorSelectedListener, View.OnClickListener {
     private lateinit var shapeFragment: ShapeFragment
     private lateinit var photoEditor: PhotoEditor
-    private lateinit var fileSaveHelper: FileSaveHelper
     private val viewModel: PhotoSaverViewModel by viewModels()
     private lateinit var loadingView: ProgressBar
 
@@ -43,10 +42,13 @@ class MainActivity : AppCompatActivity(), EditorAdapter.OnEditorSelectedListener
 
         photoEditor = PhotoEditor(findViewById(R.id.photoEditorView))
         loadingView = findViewById(R.id.progress_loading)
-        fileSaveHelper = FileSaveHelper(this)
+
         initRecycleView()
         initImageView()
         initViewModel()
+
+        // TODO bad idea for passing
+        viewModel.set(this)
     }
 
     private fun initViewModel() {
@@ -54,10 +56,6 @@ class MainActivity : AppCompatActivity(), EditorAdapter.OnEditorSelectedListener
             when (status) {
                 PhotoSaverStatus.DONE -> {
                     loadingView.visibility = View.GONE
-                    // You should execute below to make the output into photo content provider
-                    fileSaveHelper.notifyThatFileIsNowPubliclyAvailable(
-                        contentResolver
-                    )
                 }
                 PhotoSaverStatus.ERROR -> {
                     loadingView.visibility = View.GONE
@@ -133,7 +131,6 @@ class MainActivity : AppCompatActivity(), EditorAdapter.OnEditorSelectedListener
     }
 
     // TODO the request permission failed
-    // TODO Show loading
     // Step 1: Create the URI of Image File
     // Step 2: Generate the image file and save to this URI
     private fun saveImage() {
@@ -144,19 +141,9 @@ class MainActivity : AppCompatActivity(), EditorAdapter.OnEditorSelectedListener
             Manifest.permission.WRITE_EXTERNAL_STORAGE
         ) == PackageManager.PERMISSION_GRANTED
         if (hasStoragePermission || FileSaveHelper.isSdkHigherThan28()) {
-            fileSaveHelper.createFile(fileName, object : FileSaveHelper.OnFileCreateResult {
-                @RequiresPermission(allOf = [Manifest.permission.WRITE_EXTERNAL_STORAGE])
-                override fun onFileCreateResult(
-                    created: Boolean,
-                    filePath: String?,
-                    error: String?,
-                    uri: Uri?
-                ) {
-                    if (created && filePath != null) {
-                        viewModel.save(filePath, photoEditor.photoEditorView)
-                    }
-                }
-            })
+            viewModel.creatFile(fileName, photoEditor.photoEditorView) {
+                contentResolver
+            }
         } else {
             // requestPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
         }

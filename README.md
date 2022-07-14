@@ -21,7 +21,7 @@ There are two important documents to me are
 3. Resize any of the objects
 4. Drag the selecting shape around
 5. Can undo and redo, user could undo deleting or adding object
-6. Export and share as images.
+6. Export and share as images
 
 # Architecture & Philosophy
 ## Android Components
