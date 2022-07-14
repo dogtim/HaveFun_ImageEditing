@@ -1,19 +1,22 @@
 package com.example.imageeditor.file
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.content.ContentResolver
 import android.content.ContentValues
 import android.database.Cursor
+import android.graphics.Bitmap
+import android.graphics.Canvas
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
-import androidx.lifecycle.LifecycleObserver
-import androidx.lifecycle.MutableLiveData
+import android.view.View
+import androidx.annotation.RequiresPermission
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.OnLifecycleEvent
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.Observer
+import androidx.lifecycle.*
+import kotlinx.coroutines.launch
+import java.io.File
+import java.io.FileOutputStream
 import kotlin.Throws
 import java.io.IOException
 import java.lang.Exception
@@ -24,6 +27,61 @@ class FileSaveHelper(private val mContentResolver: ContentResolver) : LifecycleO
     private val executor: ExecutorService? = Executors.newSingleThreadExecutor()
     private val fileCreatedResult: MutableLiveData<FileMeta> = MutableLiveData()
     private var resultListener: OnFileCreateResult? = null
+
+    val status = MutableLiveData<PhotoSaverStatus>()
+    private val scale = 1.0f
+    private fun getBitmap(view: View): Bitmap {
+        val bitmap = Bitmap.createBitmap(
+            view.width,
+            view.height,
+            Bitmap.Config.ARGB_8888
+        )
+        view.draw(Canvas(bitmap))
+
+        return if (scale.equals(1.0f)) {
+            bitmap
+        } else {
+            ScalingUtility().createScaledBitmap(
+                bitmap,
+                (view.width * scale).toInt(),
+                (view.height * scale).toInt(),
+                ScalingUtility.ScalingLogic.FIT
+            )
+        }
+    }
+
+    /**
+     * Save the Bitmap from indicated view and place to given path
+     *
+     * @param path path on which image to be saved
+     * @param view generate the bitmap from this view
+     */
+    @RequiresPermission(allOf = [Manifest.permission.WRITE_EXTERNAL_STORAGE])
+    fun save(path: String, view: View, result: () -> ContentResolver) {
+        status.value = PhotoSaverStatus.LOADING
+        val file = File(path)
+        // https://stackoverflow.com/questions/58680028/how-to-make-inappropriate-blocking-method-call-appropriate
+        // To replace try, catch with runCatching for figuring out the lint problem
+        runCatching {
+            val out = FileOutputStream(file, false)
+            val capturedBitmap = getBitmap(view)
+            capturedBitmap.compress(
+                Bitmap.CompressFormat.PNG,
+                100,
+                out
+            )
+            out.flush()
+            out.close()
+            // You should execute below to make the output into photo content provider
+            notifyThatFileIsNowPubliclyAvailable(
+                result()
+            )
+            status.value = PhotoSaverStatus.DONE
+        }.onFailure {
+            it.printStackTrace()
+            status.value = PhotoSaverStatus.ERROR
+        }
+    }
 
     private val observer = Observer { fileMeta: FileMeta ->
         if (resultListener != null) {

@@ -4,7 +4,6 @@ import android.Manifest
 import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -13,7 +12,6 @@ import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
-import androidx.annotation.RequiresPermission
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
@@ -27,7 +25,11 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 class MainActivity : AppCompatActivity(), EditorAdapter.OnEditorSelectedListener, View.OnClickListener {
     private lateinit var shapeFragment: ShapeFragment
     private lateinit var photoEditor: PhotoEditor
-    private val viewModel: PhotoSaverViewModel by viewModels()
+    private val viewModel: PhotoSaverViewModel by viewModels {
+        PhotoSaverViewModel.PhotoSaverViewFactor(
+            FileSaveHelper(this)
+        )
+    }
     private lateinit var loadingView: ProgressBar
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,9 +48,6 @@ class MainActivity : AppCompatActivity(), EditorAdapter.OnEditorSelectedListener
         initRecycleView()
         initImageView()
         initViewModel()
-
-        // TODO bad idea for passing
-        viewModel.set(this)
     }
 
     private fun initViewModel() {
@@ -141,11 +140,13 @@ class MainActivity : AppCompatActivity(), EditorAdapter.OnEditorSelectedListener
             Manifest.permission.WRITE_EXTERNAL_STORAGE
         ) == PackageManager.PERMISSION_GRANTED
         if (hasStoragePermission || FileSaveHelper.isSdkHigherThan28()) {
-            viewModel.creatFile(fileName, photoEditor.photoEditorView) {
+            viewModel.exportFile(fileName, photoEditor.photoEditorView) {
                 contentResolver
             }
         } else {
             // requestPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
         }
     }
+
 }
+
