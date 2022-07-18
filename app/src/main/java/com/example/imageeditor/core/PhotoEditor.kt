@@ -12,33 +12,31 @@ import com.example.imageeditor.core.view.PhotoEditorView
 class PhotoEditor (
     val photoEditorView: PhotoEditorView
 )  {
-    private val viewState: PhotoEditorViewState = PhotoEditorViewState()
-    private val graphicManager: GraphicManager = GraphicManager(photoEditorView, viewState)
-    val boxHelper: BoxHelper = BoxHelper(photoEditorView, viewState)
+    val graphicManager: GraphicManager = GraphicManager(photoEditorView, PhotoEditorViewState())
 
     fun addEmoji(emojiTypeface: Typeface?, emojiName: String?) {
-        val emoji = Emoji(photoEditorView, viewState, getMultiTouchListener(), graphicManager)
+        val emoji = Emoji(photoEditorView, getMultiTouchListener(), graphicManager)
         emoji.buildView(emojiTypeface, emojiName)
         addToEditor(emoji)
     }
 
     fun addImage(uri: Uri) {
-        val photoImage = PhotoImage(photoEditorView, getMultiTouchListener(), viewState, graphicManager)
+        val photoImage = PhotoImage(photoEditorView, getMultiTouchListener(), graphicManager)
         photoImage.buildView(uri)
         addToEditor(photoImage)
     }
 
     private fun addToEditor(graphic: Graphic) {
-        boxHelper.clear()
+        graphicManager.clear()
         graphicManager.addView(graphic)
         // Change the in-focus view
-        viewState.currentSelectedView = graphic.rootView
+        graphicManager.viewState.currentSelectedView = graphic.rootView
     }
 
     private fun getMultiTouchListener(): MultiTouchListener {
         return MultiTouchListener(
             photoEditorView,
-            viewState
+            graphicManager.viewState
         )
     }
 

@@ -11,8 +11,7 @@ import com.example.imageeditor.core.view.PhotoEditorView
 internal class PhotoImage(
     private val photoEditorView: PhotoEditorView,
     private val multiTouchListener: MultiTouchListener,
-    private val viewState: PhotoEditorViewState,
-    graphicManager: GraphicManager?
+    graphicManager: GraphicManager
 ) : Graphic(
     context = photoEditorView.context,
     graphicManager = graphicManager,
@@ -29,7 +28,7 @@ internal class PhotoImage(
     }
 
     private fun setupGesture() {
-        val onGestureControl = buildGestureController(photoEditorView, viewState)
+        val onGestureControl = buildGestureController(graphicManager.viewState)
         multiTouchListener.setOnGestureControl(onGestureControl)
         val rootView = rootView
         rootView.setOnTouchListener(multiTouchListener)

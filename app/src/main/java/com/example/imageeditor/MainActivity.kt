@@ -62,7 +62,7 @@ class MainActivity : AppCompatActivity(), EditorAdapter.OnEditorSelectedListener
                 }
                 PhotoSaverStatus.LOADING -> {
                     loadingView.visibility = View.VISIBLE
-                    photoEditor.boxHelper.clear()
+                    photoEditor.graphicManager.clear()
                 }
                 else -> {
                     Log.e("MainActivity", "You should check the PhotoSaverStatus problem")

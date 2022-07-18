@@ -5,15 +5,13 @@ import android.view.Gravity
 import android.view.View
 import android.widget.TextView
 import com.example.imageeditor.R
-import com.example.imageeditor.core.PhotoEditorViewState
 import com.example.imageeditor.core.listener.MultiTouchListener
 import com.example.imageeditor.core.view.PhotoEditorView
 
 internal class Emoji(
     private val photoEditorView: PhotoEditorView,
-    private val viewState: PhotoEditorViewState,
     private val multiTouchListener: MultiTouchListener,
-    graphicManager: GraphicManager?,
+    graphicManager: GraphicManager,
 ) : Graphic(
     context = photoEditorView.context,
     graphicManager = graphicManager,
@@ -26,7 +24,7 @@ internal class Emoji(
     }
 
     private fun setupGesture() {
-        val onGestureControl = buildGestureController(photoEditorView, viewState)
+        val onGestureControl = buildGestureController(graphicManager.viewState)
         multiTouchListener.setOnGestureControl(onGestureControl)
         val rootView = rootView
         rootView.setOnTouchListener(multiTouchListener)

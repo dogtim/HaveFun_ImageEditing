@@ -10,7 +10,7 @@ import com.example.imageeditor.core.PhotoEditorViewState
 import com.example.imageeditor.core.scale.ScaleGestureListener
 import com.example.imageeditor.core.view.PhotoEditorView
 
-internal class MultiTouchListener(
+class MultiTouchListener(
     private val photoEditorView: PhotoEditorView,
     private val viewState: PhotoEditorViewState
 ) : OnTouchListener {
@@ -80,7 +80,7 @@ internal class MultiTouchListener(
         return true
     }
 
-    internal interface OnGestureControl {
+    interface OnGestureControl {
         fun onClick()
     }
 

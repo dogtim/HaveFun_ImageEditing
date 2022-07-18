@@ -5,16 +5,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.ImageView
 import com.example.imageeditor.R
-import com.example.imageeditor.core.BoxHelper
 import com.example.imageeditor.core.PhotoEditorViewState
 import com.example.imageeditor.core.listener.MultiTouchListener
-import com.example.imageeditor.core.view.PhotoEditorView
 
-internal abstract class Graphic(
+abstract class Graphic(
     val context: Context,
     val layoutId: Int,
-    // TODO We should decouple the manager into Graphic, instead it of callback
-    val graphicManager: GraphicManager?) {
+    val graphicManager: GraphicManager) {
 
     val rootView: View = LayoutInflater.from(context).inflate(layoutId, null)
 
@@ -25,22 +22,20 @@ internal abstract class Graphic(
 
     private fun setupRemoveView() {
         rootView.findViewById<ImageView>(R.id.image_close)?.setOnClickListener {
-            graphicManager?.removeView(this@Graphic)
+            graphicManager.removeView(this@Graphic)
         }
     }
 
     protected fun buildGestureController(
-        photoEditorView: PhotoEditorView,
         viewState: PhotoEditorViewState
     ): MultiTouchListener.OnGestureControl {
-        val boxHelper = BoxHelper(photoEditorView, viewState)
         return object : MultiTouchListener.OnGestureControl {
             /**
              * 1. Set GONE to the Border which is visibility
              * 2. Set Visibility = TRUE to the Border which user select
              */
             override fun onClick() {
-                boxHelper.clear()
+                graphicManager.clear()
                 toggleSelection()
                 viewState.currentSelectedView = rootView
             }
