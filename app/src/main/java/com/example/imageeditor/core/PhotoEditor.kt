@@ -15,12 +15,14 @@ class PhotoEditor (
     val graphicManager: GraphicManager = GraphicManager(photoEditorView, PhotoEditorViewState())
 
     fun addEmoji(emojiData: EmojiData) {
-        val emoji = EmojiGraphic(photoEditorView, getMultiTouchListener(), graphicManager, emojiData)
+        val context = photoEditorView.context
+        val emoji = EmojiGraphic(context, graphicManager, emojiData)
         addToEditor(emoji)
     }
 
     fun addImage(uri: Uri) {
-        val photoImage = PhotoGraphic(photoEditorView, getMultiTouchListener(), graphicManager)
+        val context = photoEditorView.context
+        val photoImage = PhotoGraphic(context, graphicManager)
         photoImage.buildView(uri)
         addToEditor(photoImage)
     }
@@ -32,12 +34,6 @@ class PhotoEditor (
         graphicManager.viewState.selectedView = graphic.rootView
     }
 
-    private fun getMultiTouchListener(): MultiTouchListener {
-        return MultiTouchListener(
-            photoEditorView,
-            graphicManager.viewState
-        )
-    }
 
     fun undo(): Boolean {
         return graphicManager.undoView()

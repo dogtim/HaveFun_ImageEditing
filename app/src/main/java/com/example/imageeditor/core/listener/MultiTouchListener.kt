@@ -1,5 +1,6 @@
 package com.example.imageeditor.core.listener
 
+import android.content.Context
 import android.graphics.Rect
 import android.view.GestureDetector
 import android.view.GestureDetector.SimpleOnGestureListener
@@ -12,7 +13,7 @@ import com.example.imageeditor.core.view.PhotoEditorView
 
 // https://www.twblogs.net/a/5cd35c7abd9eee6726c953a8
 class MultiTouchListener(
-    private val photoEditorView: PhotoEditorView,
+    private val context: Context,
     private val viewState: PhotoEditorViewState
 ) : OnTouchListener {
     // To handle the rotate & scale operation
@@ -33,7 +34,7 @@ class MultiTouchListener(
     }
 
     init {
-        gestureListener = GestureDetector(this.photoEditorView.context, GestureListener())
+        gestureListener = GestureDetector(context, GestureListener())
         outRect = Rect(0, 0, 0, 0)
     }
 

@@ -1,5 +1,6 @@
 package com.example.imageeditor.core.graphic
 
+import android.content.Context
 import android.graphics.Rect
 import android.view.Gravity
 import android.view.View
@@ -7,30 +8,20 @@ import android.widget.TextView
 import com.example.imageeditor.R
 import com.example.imageeditor.core.data.EmojiData
 import com.example.imageeditor.core.listener.MultiTouchListener
-import com.example.imageeditor.core.view.PhotoEditorView
 
 internal class EmojiGraphic(
-    private val photoEditorView: PhotoEditorView,
-    private val multiTouchListener: MultiTouchListener,
+    context: Context,
     graphicManager: GraphicManager,
     private val data: EmojiData
 ) : Graphic(
-    context = photoEditorView.context,
+    context = context,
     graphicManager = graphicManager,
     layoutId = R.layout.view_photo_editor_text
 ) {
     private lateinit var txtEmoji: TextView
 
     init {
-        setupGesture()
         setupView()
-    }
-
-    private fun setupGesture() {
-        val onGestureControl = buildGestureController(graphicManager.viewState)
-        multiTouchListener.setOnGestureControl(onGestureControl)
-        val rootView = rootView
-        rootView.setOnTouchListener(multiTouchListener)
     }
 
     override fun setupView() {

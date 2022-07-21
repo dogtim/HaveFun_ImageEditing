@@ -15,9 +15,20 @@ abstract class Graphic(
     val graphicManager: GraphicManager) {
 
     val rootView: View = LayoutInflater.from(context).inflate(layoutId, null)
+    abstract fun setupView()
+    abstract fun rect(): Rect
 
     init {
+        setupGesture()
         setupRemoveView()
+    }
+
+    private fun setupGesture() {
+        val onGestureControl = buildGestureController(graphicManager.viewState)
+        val multiTouchListener = getMultiTouchListener()
+        multiTouchListener.setOnGestureControl(onGestureControl)
+        val rootView = rootView
+        rootView.setOnTouchListener(multiTouchListener)
     }
 
     private fun setupRemoveView() {
@@ -53,7 +64,11 @@ abstract class Graphic(
         }
     }
 
-    abstract fun setupView()
+    fun getMultiTouchListener(): MultiTouchListener {
+        return MultiTouchListener(
+            context,
+            graphicManager.viewState
+        )
+    }
 
-    abstract fun rect(): Rect
 }

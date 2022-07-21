@@ -1,5 +1,6 @@
 package com.example.imageeditor.core.graphic
 
+import android.content.Context
 import android.graphics.Rect
 import android.net.Uri
 import android.view.View
@@ -11,30 +12,21 @@ import com.example.imageeditor.core.listener.MultiTouchListener
 import com.example.imageeditor.core.view.PhotoEditorView
 
 internal class PhotoGraphic (
-    private val photoEditorView: PhotoEditorView,
-    private val multiTouchListener: MultiTouchListener,
+    context: Context,
     graphicManager: GraphicManager
 ) : Graphic(
-    context = photoEditorView.context,
+    context = context,
     graphicManager = graphicManager,
     layoutId = R.layout.view_photo_editor_image
 ) {
     private lateinit var imageView: ImageView
 
     init {
-        setupGesture()
         setupView()
     }
 
     fun buildView(uri: Uri) {
         imageView.setImageURI(uri)
-    }
-
-    private fun setupGesture() {
-        val onGestureControl = buildGestureController(graphicManager.viewState)
-        multiTouchListener.setOnGestureControl(onGestureControl)
-        val rootView = rootView
-        rootView.setOnTouchListener(multiTouchListener)
     }
 
     override fun setupView() {
