@@ -1,5 +1,6 @@
 package com.example.imageeditor.core.graphic
 
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
@@ -8,6 +9,7 @@ import android.widget.RelativeLayout
 import com.example.imageeditor.R
 import com.example.imageeditor.core.PhotoEditorViewState
 import com.example.imageeditor.core.view.PhotoEditorView
+
 
 class GraphicManager(
     private val photoEditorView: PhotoEditorView,
@@ -23,7 +25,15 @@ class GraphicManager(
         val params = RelativeLayout.LayoutParams(
             ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT
         )
-        params.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE)
+
+        if (graphic.rect().left != 0) {
+            params.marginStart = graphic.rect().left
+            params.topMargin = graphic.rect().top
+        }
+        else {
+            params.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE)
+        }
+
         photoEditorView.addView(view, params)
         viewState.addAddedView(view)
     }

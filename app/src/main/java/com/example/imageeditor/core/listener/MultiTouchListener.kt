@@ -10,6 +10,7 @@ import com.example.imageeditor.core.PhotoEditorViewState
 import com.example.imageeditor.core.scale.ScaleGestureListener
 import com.example.imageeditor.core.view.PhotoEditorView
 
+// https://www.twblogs.net/a/5cd35c7abd9eee6726c953a8
 class MultiTouchListener(
     private val photoEditorView: PhotoEditorView,
     private val viewState: PhotoEditorViewState

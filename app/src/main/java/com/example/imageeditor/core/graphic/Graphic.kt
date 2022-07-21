@@ -1,6 +1,7 @@
 package com.example.imageeditor.core.graphic
 
 import android.content.Context
+import android.graphics.Rect
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.ImageView
@@ -16,7 +17,6 @@ abstract class Graphic(
     val rootView: View = LayoutInflater.from(context).inflate(layoutId, null)
 
     init {
-        setupView()
         setupRemoveView()
     }
 
@@ -53,5 +53,7 @@ abstract class Graphic(
         }
     }
 
-    open fun setupView() {}
+    abstract fun setupView()
+
+    abstract fun rect(): Rect
 }

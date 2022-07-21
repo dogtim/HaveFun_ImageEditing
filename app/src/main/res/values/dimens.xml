@@ -1,7 +1,7 @@
 <resources>
-    <dimen name="top_icon_width">70dp</dimen>
+    <dimen name="top_icon_width">60dp</dimen>
     <dimen name="top_icon_padding">8dp</dimen>
     <dimen name="editor_size">35dp</dimen>
     <dimen name="shape_text_size">35sp</dimen>
-
+    <dimen name="image_size_top">20dp</dimen>
 </resources>

@@ -2,6 +2,8 @@ package com.example.imageeditor
 
 import android.Manifest
 import android.app.Activity
+import android.content.Context
+import android.content.Context.MODE_PRIVATE
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
@@ -9,18 +11,24 @@ import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.ProgressBar
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.core.view.children
 import androidx.recyclerview.widget.RecyclerView
 import com.example.imageeditor.core.PhotoEditor
+import com.example.imageeditor.core.data.Backup
+import com.example.imageeditor.core.data.EmojiData
 import com.example.imageeditor.file.FileSaveHelper
 import com.example.imageeditor.file.PhotoSaverStatus
 import com.example.imageeditor.file.PhotoSaverViewModel
 import com.example.imageeditor.fragment.ShapeFragment
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.google.gson.Gson
+import java.io.*
 
 class MainActivity : AppCompatActivity(), EditorAdapter.OnEditorSelectedListener, View.OnClickListener {
     private lateinit var shapeFragment: ShapeFragment
@@ -39,7 +47,7 @@ class MainActivity : AppCompatActivity(), EditorAdapter.OnEditorSelectedListener
         shapeFragment = ShapeFragment()
         shapeFragment.setListener(object: ShapeFragment.ShapeListener {
             override fun onClick(emojiUnicode: String) {
-                photoEditor.addEmoji(null, emojiUnicode)
+                photoEditor.addEmoji(EmojiData(emojiUnicode))
             }
         })
 
@@ -82,6 +90,13 @@ class MainActivity : AppCompatActivity(), EditorAdapter.OnEditorSelectedListener
         saveImageView.setOnClickListener(this)
         val redoImageView: ImageView = findViewById(R.id.image_redo)
         redoImageView.setOnClickListener(this)
+        val saveStatusImageView: ImageView = findViewById(R.id.image_save_status)
+        saveStatusImageView.setOnClickListener(this)
+        val clearImageView: ImageView = findViewById(R.id.image_clear)
+        clearImageView.setOnClickListener(this)
+
+        val restoreImageView: ImageView = findViewById(R.id.image_restore)
+        restoreImageView.setOnClickListener(this)
     }
 
     private fun showBottomSheetDialogFragment(fragment: BottomSheetDialogFragment) {
@@ -118,15 +133,87 @@ class MainActivity : AppCompatActivity(), EditorAdapter.OnEditorSelectedListener
                 }
             }
         }
-
     override fun onClick(view: View) {
         when (view.id) {
-            R.id.image_undo -> photoEditor.undo()
+            R.id.image_save_status -> {
+                val list = mutableListOf<EmojiData>()
+                photoEditor.photoEditorView.children.forEach {
+                    it.findViewById<TextView>(R.id.text_photo_editor)?.run {
+                        val data = EmojiData(text.toString())
+                        data.left = it.x.toInt()
+                        data.top = it.y.toInt()
+
+                        list.add(data)
+                    }
+                }
+                buildJson(list)
+            }
+            R.id.image_clear -> {
+                // TODO clear the data
+            }
+            R.id.image_restore -> {
+                val string = readFromFile(this)
+                val gson = Gson()
+                val testModel = gson.fromJson(string, Backup::class.java)
+
+                testModel.emojis?.let {
+                    it.forEach { emoji ->
+                        photoEditor.addEmoji(emoji)
+                    }
+                }
+            }
+            R.id.image_undo -> {
+                photoEditor.undo()
+            }
+
             R.id.image_save -> {
                 Toast.makeText(this, "Save", Toast.LENGTH_SHORT).show()
                 saveImage()
             }
-            R.id.image_redo -> photoEditor.redo()
+            R.id.image_redo -> {
+                photoEditor.redo()
+            }
+        }
+    }
+
+    private fun buildJson(emojiDataList: List<EmojiData>) {
+        val gson = Gson()
+        val backup = Backup()
+        backup.emojis = emojiDataList
+        val json = gson.toJson(backup)
+
+        writeToFile(json)
+    }
+    private fun readFromFile(context: Context): String {
+        var ret = ""
+        try {
+            val inputStream: InputStream? = context.openFileInput("config.txt")
+            if (inputStream != null) {
+                val inputStreamReader = InputStreamReader(inputStream)
+                val bufferedReader = BufferedReader(inputStreamReader)
+                var receiveString: String? = ""
+                val stringBuilder = StringBuilder()
+                while (bufferedReader.readLine().also { receiveString = it } != null) {
+                    stringBuilder.append("\n").append(receiveString)
+                }
+                inputStream.close()
+                ret = stringBuilder.toString()
+            }
+        } catch (e: FileNotFoundException) {
+            Log.e("login activity", "File not found: " + e.toString())
+        } catch (e: IOException) {
+            Log.e("login activity", "Can not read file: $e")
+        }
+        return ret
+    }
+    private fun writeToFile(data: String) {
+        try {
+            val outputStreamWriter =
+                OutputStreamWriter(openFileOutput("config.txt", MODE_PRIVATE))
+            outputStreamWriter.write(data)
+            outputStreamWriter.close()
+        } catch (e: IOException) {
+            Log.e("Exception", "File write failed: " + e.toString())
         }
     }
 

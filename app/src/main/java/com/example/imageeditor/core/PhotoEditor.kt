@@ -2,7 +2,9 @@ package com.example.imageeditor.core
 
 import android.graphics.Typeface
 import android.net.Uri
-import com.example.imageeditor.core.graphic.Emoji
+import android.util.Log
+import com.example.imageeditor.core.data.EmojiData
+import com.example.imageeditor.core.graphic.EmojiGraphic
 import com.example.imageeditor.core.graphic.Graphic
 import com.example.imageeditor.core.graphic.GraphicManager
 import com.example.imageeditor.core.graphic.PhotoImage
@@ -14,9 +16,8 @@ class PhotoEditor (
 )  {
     val graphicManager: GraphicManager = GraphicManager(photoEditorView, PhotoEditorViewState())
 
-    fun addEmoji(emojiTypeface: Typeface?, emojiName: String?) {
-        val emoji = Emoji(photoEditorView, getMultiTouchListener(), graphicManager)
-        emoji.buildView(emojiTypeface, emojiName)
+    fun addEmoji(emojiData: EmojiData) {
+        val emoji = EmojiGraphic(photoEditorView, getMultiTouchListener(), graphicManager, emojiData)
         addToEditor(emoji)
     }
 
