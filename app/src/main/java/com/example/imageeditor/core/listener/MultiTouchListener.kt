@@ -55,7 +55,7 @@ class MultiTouchListener(
             }
             MotionEvent.ACTION_MOVE ->
                 // Only enable dragging on focused stickers.
-                if (view === viewState.currentSelectedView) {
+                if (view === viewState.selectedView) {
                     val pointerIndexMove = event.findPointerIndex(mActivePointerId)
                     if (pointerIndexMove != -1) {
                         val currX = event.getX(pointerIndexMove)

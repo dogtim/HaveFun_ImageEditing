@@ -8,7 +8,7 @@ import java.util.*
  *
  */
 class PhotoEditorViewState {
-    var currentSelectedView: View? = null
+    var selectedView: View? = null
     private val addedViews: MutableList<View>
     private val redoViews: Stack<View>
 
@@ -18,7 +18,7 @@ class PhotoEditorViewState {
     }
 
     fun clearCurrentSelectedView() {
-        currentSelectedView = null
+        selectedView = null
     }
 
     fun getAddedView(index: Int): View {

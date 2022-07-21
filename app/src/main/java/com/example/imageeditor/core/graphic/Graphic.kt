@@ -37,7 +37,7 @@ abstract class Graphic(
             override fun onClick() {
                 graphicManager.clear()
                 toggleSelection()
-                viewState.currentSelectedView = rootView
+                viewState.selectedView = rootView
             }
 
         }

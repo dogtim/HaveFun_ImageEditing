@@ -1,13 +1,11 @@
 package com.example.imageeditor.core
 
-import android.graphics.Typeface
 import android.net.Uri
-import android.util.Log
 import com.example.imageeditor.core.data.EmojiData
 import com.example.imageeditor.core.graphic.EmojiGraphic
 import com.example.imageeditor.core.graphic.Graphic
 import com.example.imageeditor.core.graphic.GraphicManager
-import com.example.imageeditor.core.graphic.PhotoImage
+import com.example.imageeditor.core.graphic.PhotoGraphic
 import com.example.imageeditor.core.listener.MultiTouchListener
 import com.example.imageeditor.core.view.PhotoEditorView
 
@@ -22,7 +20,7 @@ class PhotoEditor (
     }
 
     fun addImage(uri: Uri) {
-        val photoImage = PhotoImage(photoEditorView, getMultiTouchListener(), graphicManager)
+        val photoImage = PhotoGraphic(photoEditorView, getMultiTouchListener(), graphicManager)
         photoImage.buildView(uri)
         addToEditor(photoImage)
     }
@@ -31,7 +29,7 @@ class PhotoEditor (
         graphicManager.clear()
         graphicManager.addView(graphic)
         // Change the in-focus view
-        graphicManager.viewState.currentSelectedView = graphic.rootView
+        graphicManager.viewState.selectedView = graphic.rootView
     }
 
     private fun getMultiTouchListener(): MultiTouchListener {
