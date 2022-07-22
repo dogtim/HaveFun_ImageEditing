@@ -9,7 +9,6 @@ import android.view.View
 import android.view.View.OnTouchListener
 import com.example.imageeditor.core.PhotoEditorViewState
 import com.example.imageeditor.core.scale.ScaleGestureListener
-import com.example.imageeditor.core.view.PhotoEditorView
 
 // https://www.twblogs.net/a/5cd35c7abd9eee6726c953a8
 class MultiTouchListener(
@@ -21,13 +20,13 @@ class MultiTouchListener(
     private val gestureListener: GestureDetector
     private val isTranslateEnabled = true
 
-    private var mActivePointerId = INVALID_POINTER_ID
-    private var mPrevX = 0f
-    private var mPrevY = 0f
-    private var mPrevRawX = 0f
-    private var mPrevRawY = 0f
+    private var activePointerId = INVALID_POINTER_ID
+    private var prevX = 0f
+    private var prevY = 0f
+    private var prevRawX = 0f
+    private var prevRawY = 0f
     private var outRect: Rect? = null
-    private var mOnGestureControl: OnGestureControl? = null
+    private var onGestureControl: OnGestureControl? = null
 
     companion object {
         private const val INVALID_POINTER_ID = -1
@@ -47,35 +46,35 @@ class MultiTouchListener(
         val action = event.action
         when (action and event.actionMasked) {
             MotionEvent.ACTION_DOWN -> {
-                mPrevX = event.x
-                mPrevY = event.y
-                mPrevRawX = event.rawX
-                mPrevRawY = event.rawY
-                mActivePointerId = event.getPointerId(0)
+                prevX = event.x
+                prevY = event.y
+                prevRawX = event.rawX
+                prevRawY = event.rawY
+                activePointerId = event.getPointerId(0)
                 view.bringToFront()
             }
             MotionEvent.ACTION_MOVE ->
                 // Only enable dragging on focused stickers.
                 if (view === viewState.selectedView) {
-                    val pointerIndexMove = event.findPointerIndex(mActivePointerId)
+                    val pointerIndexMove = event.findPointerIndex(activePointerId)
                     if (pointerIndexMove != -1) {
                         val currX = event.getX(pointerIndexMove)
                         val currY = event.getY(pointerIndexMove)
                         if (!scaleGestureDetector.isInProgress) {
-                            adjustTranslation(view, currX - mPrevX, currY - mPrevY)
+                            adjustTranslation(view, currX - prevX, currY - prevY)
                         }
                     }
                 }
-            MotionEvent.ACTION_CANCEL -> mActivePointerId = INVALID_POINTER_ID
+            MotionEvent.ACTION_CANCEL -> activePointerId = INVALID_POINTER_ID
             MotionEvent.ACTION_POINTER_UP -> {
                 val pointerIndexPointerUp =
                     action and MotionEvent.ACTION_POINTER_INDEX_MASK shr MotionEvent.ACTION_POINTER_INDEX_SHIFT
                 val pointerId = event.getPointerId(pointerIndexPointerUp)
-                if (pointerId == mActivePointerId) {
+                if (pointerId == activePointerId) {
                     val newPointerIndex = if (pointerIndexPointerUp == 0) 1 else 0
-                    mPrevX = event.getX(newPointerIndex)
-                    mPrevY = event.getY(newPointerIndex)
-                    mActivePointerId = event.getPointerId(newPointerIndex)
+                    prevX = event.getX(newPointerIndex)
+                    prevY = event.getY(newPointerIndex)
+                    activePointerId = event.getPointerId(newPointerIndex)
                 }
             }
         }
@@ -87,12 +86,12 @@ class MultiTouchListener(
     }
 
     fun setOnGestureControl(onGestureControl: OnGestureControl?) {
-        mOnGestureControl = onGestureControl
+        this.onGestureControl = onGestureControl
     }
 
     private inner class GestureListener : SimpleOnGestureListener() {
         override fun onSingleTapUp(e: MotionEvent): Boolean {
-            mOnGestureControl?.onClick()
+            onGestureControl?.onClick()
             return true
         }
 

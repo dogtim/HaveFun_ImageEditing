@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.ImageView
 import com.example.imageeditor.R
-import com.example.imageeditor.core.PhotoEditorViewState
 import com.example.imageeditor.core.listener.MultiTouchListener
 
 abstract class Graphic(
@@ -24,10 +23,9 @@ abstract class Graphic(
     }
 
     private fun setupGesture() {
-        val onGestureControl = buildGestureController(graphicManager.viewState)
+        val onGestureControl = buildGestureController()
         val multiTouchListener = getMultiTouchListener()
         multiTouchListener.setOnGestureControl(onGestureControl)
-        val rootView = rootView
         rootView.setOnTouchListener(multiTouchListener)
     }
 
@@ -37,9 +35,7 @@ abstract class Graphic(
         }
     }
 
-    private fun buildGestureController(
-        viewState: PhotoEditorViewState
-    ): MultiTouchListener.OnGestureControl {
+    private fun buildGestureController(): MultiTouchListener.OnGestureControl {
         return object : MultiTouchListener.OnGestureControl {
             /**
              * 1. Set GONE to the Border which is visibility
@@ -48,7 +44,7 @@ abstract class Graphic(
             override fun onClick() {
                 graphicManager.clearAppearance()
                 toggleSelection()
-                viewState.selectedView = rootView
+                graphicManager.viewState.selectedView = rootView
             }
 
         }
@@ -64,7 +60,7 @@ abstract class Graphic(
         }
     }
 
-    fun getMultiTouchListener(): MultiTouchListener {
+    private fun getMultiTouchListener(): MultiTouchListener {
         return MultiTouchListener(
             context,
             graphicManager.viewState
