@@ -142,6 +142,8 @@ class MainActivity : AppCompatActivity(), EditorAdapter.OnEditorSelectedListener
                         data.left = it.x.toInt()
                         data.top = it.y.toInt()
                         data.rotation = it.rotation
+                        data.scaleX = it.scaleX
+                        data.scaleY = it.scaleY
                         list.add(data)
                     }
                 }

@@ -7,5 +7,7 @@ data class Emoji(@SerializedName("name") val name: String) {
     @SerializedName("top") var top: Int = 0
     @SerializedName("left") var left: Int = 0
     @SerializedName("rotation") var rotation: Float = 0f
+    @SerializedName("scaleX") var scaleX: Float = 0f
+    @SerializedName("scaleY") var scaleY: Float = 0f
     @SerializedName("typeface") var typeface: Typeface? = null
 }

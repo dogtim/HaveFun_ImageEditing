@@ -9,11 +9,14 @@ import android.view.View
 import android.widget.ImageView
 import com.example.imageeditor.R
 import com.example.imageeditor.core.listener.MultiTouchListener
+import com.google.gson.annotations.SerializedName
 
 data class GraphicAttributes(
     var left: Int = 0,
     var top: Int  = 0,
-    var rotation: Float = 0f
+    var rotation: Float = 0f,
+    var scaleX: Float = 0f,
+    var scaleY: Float = 0f
 )
 
 abstract class Graphic(

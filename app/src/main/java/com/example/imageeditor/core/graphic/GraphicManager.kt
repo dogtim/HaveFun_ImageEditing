@@ -26,6 +26,8 @@ class GraphicManager(private val photoEditorView: PhotoEditorView) {
             params.marginStart = graphic.attributes.left
             params.topMargin = graphic.attributes.top
             view.rotation = graphic.attributes.rotation
+            view.scaleX = graphic.attributes.scaleX
+            view.scaleY = graphic.attributes.scaleY
         } else {
             params.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE)
         }
