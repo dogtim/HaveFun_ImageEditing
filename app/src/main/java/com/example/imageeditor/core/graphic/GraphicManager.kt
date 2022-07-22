@@ -22,9 +22,10 @@ class GraphicManager(private val photoEditorView: PhotoEditorView) {
             ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT
         )
 
-        if (graphic.rect().left != 0 || graphic.rect().top != 0) {
-            params.marginStart = graphic.rect().left
-            params.topMargin = graphic.rect().top
+        if (graphic.attributes.left != 0 || graphic.attributes.top != 0) {
+            params.marginStart = graphic.attributes.left
+            params.topMargin = graphic.attributes.top
+            view.rotation = graphic.attributes.rotation
         } else {
             params.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE)
         }

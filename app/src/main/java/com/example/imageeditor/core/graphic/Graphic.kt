@@ -10,6 +10,12 @@ import android.widget.ImageView
 import com.example.imageeditor.R
 import com.example.imageeditor.core.listener.MultiTouchListener
 
+data class GraphicAttributes(
+    var left: Int = 0,
+    var top: Int  = 0,
+    var rotation: Float = 0f
+)
+
 abstract class Graphic(
     val context: Context,
     val layoutId: Int,
@@ -17,7 +23,7 @@ abstract class Graphic(
 
     val rootView: View = LayoutInflater.from(context).inflate(layoutId, null)
     abstract fun setupView()
-    abstract fun rect(): Rect
+    abstract var attributes: GraphicAttributes
 
     init {
         rootView.setOnTouchListener(getMultiTouchListener())

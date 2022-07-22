@@ -141,7 +141,7 @@ class MainActivity : AppCompatActivity(), EditorAdapter.OnEditorSelectedListener
                         val data = Emoji(text.toString())
                         data.left = it.x.toInt()
                         data.top = it.y.toInt()
-
+                        data.rotation = it.rotation
                         list.add(data)
                     }
                 }
@@ -183,6 +183,7 @@ class MainActivity : AppCompatActivity(), EditorAdapter.OnEditorSelectedListener
 
         writeToFile(json)
     }
+
     private fun readFromFile(context: Context): String {
         var ret = ""
         try {

@@ -18,6 +18,7 @@ internal class EmojiGraphic(
     layoutId = R.layout.view_photo_editor_text
 ) {
     private lateinit var txtEmoji: TextView
+    override var attributes: GraphicAttributes = GraphicAttributes(data.left, data.top, data.rotation)
 
     init {
         setupView()
@@ -37,10 +38,6 @@ internal class EmojiGraphic(
             textSize = 56f
             text = data.name
         }
-    }
-
-    override fun rect(): Rect {
-        return Rect(data.left, data.top, data.left, data.top)
     }
 
 }

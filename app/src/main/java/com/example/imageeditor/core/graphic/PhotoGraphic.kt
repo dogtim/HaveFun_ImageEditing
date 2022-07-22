@@ -20,7 +20,7 @@ internal class PhotoGraphic (
     layoutId = R.layout.view_photo_editor_image
 ) {
     private lateinit var imageView: ImageView
-
+    override var attributes: GraphicAttributes = GraphicAttributes(0, 0, 0f)
     init {
         setupView()
     }
@@ -33,7 +33,4 @@ internal class PhotoGraphic (
         imageView = rootView.findViewById(R.id.image_photo_editor)
     }
 
-    override fun rect(): Rect {
-        return Rect(0, 0, 0, 0)
-    }
 }
