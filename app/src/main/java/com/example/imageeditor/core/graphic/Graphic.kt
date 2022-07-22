@@ -2,7 +2,9 @@ package com.example.imageeditor.core.graphic
 
 import android.content.Context
 import android.graphics.Rect
+import android.view.GestureDetector
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.widget.ImageView
 import com.example.imageeditor.R
@@ -18,53 +20,44 @@ abstract class Graphic(
     abstract fun rect(): Rect
 
     init {
-        setupGesture()
-        setupRemoveView()
-    }
-
-    private fun setupGesture() {
-        val onGestureControl = buildGestureController()
-        val multiTouchListener = getMultiTouchListener()
-        multiTouchListener.setOnGestureControl(onGestureControl)
-        rootView.setOnTouchListener(multiTouchListener)
-    }
-
-    private fun setupRemoveView() {
+        rootView.setOnTouchListener(getMultiTouchListener())
         rootView.findViewById<ImageView>(R.id.image_close)?.setOnClickListener {
             graphicManager.removeView(this@Graphic)
-        }
-    }
-
-    private fun buildGestureController(): MultiTouchListener.OnGestureControl {
-        return object : MultiTouchListener.OnGestureControl {
-            /**
-             * 1. Set GONE to the Border which is visibility
-             * 2. Set Visibility = TRUE to the Border which user select
-             */
-            override fun onClick() {
-                graphicManager.clearAppearance()
-                toggleSelection()
-                graphicManager.viewState.selectedView = rootView
-            }
-
-        }
-    }
-
-    private fun toggleSelection() {
-        rootView.findViewById<View>(R.id.editor_border)?.let {
-            it.setBackgroundResource(R.drawable.rounded_border_tv)
-            it.tag = true
-        }
-        rootView.findViewById<View>(R.id.image_close)?.let {
-            it.visibility = View.VISIBLE
         }
     }
 
     private fun getMultiTouchListener(): MultiTouchListener {
         return MultiTouchListener(
             context,
-            graphicManager.viewState
+            graphicManager.viewState,
+            GestureDetector(context, GestureListener())
         )
     }
 
+    private inner class GestureListener : GestureDetector.SimpleOnGestureListener() {
+        /**
+         * 1. Set GONE to the Border which is visibility
+         * 2. Set Visibility = TRUE to the Border which user select
+         */
+        override fun onSingleTapUp(e: MotionEvent): Boolean {
+            graphicManager.clearAppearance()
+            toggleSelection()
+            graphicManager.viewState.selectedView = rootView
+            return true
+        }
+
+        override fun onLongPress(e: MotionEvent) {
+            super.onLongPress(e)
+        }
+
+        private fun toggleSelection() {
+            rootView.findViewById<View>(R.id.editor_border)?.let {
+                it.setBackgroundResource(R.drawable.rounded_border_tv)
+                it.tag = true
+            }
+            rootView.findViewById<View>(R.id.image_close)?.let {
+                it.visibility = View.VISIBLE
+            }
+        }
+    }
 }

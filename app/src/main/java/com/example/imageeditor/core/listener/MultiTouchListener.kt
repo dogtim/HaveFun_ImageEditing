@@ -5,6 +5,7 @@ import android.graphics.Rect
 import android.view.GestureDetector
 import android.view.GestureDetector.SimpleOnGestureListener
 import android.view.MotionEvent
+import android.view.MotionEvent.INVALID_POINTER_ID
 import android.view.View
 import android.view.View.OnTouchListener
 import com.example.imageeditor.core.PhotoEditorViewState
@@ -13,11 +14,11 @@ import com.example.imageeditor.core.scale.ScaleGestureListener
 // https://www.twblogs.net/a/5cd35c7abd9eee6726c953a8
 class MultiTouchListener(
     private val context: Context,
-    private val viewState: PhotoEditorViewState
+    private val viewState: PhotoEditorViewState,
+    private val gestureDetector: GestureDetector
 ) : OnTouchListener {
     // To handle the rotate & scale operation
     private val scaleGestureDetector = ScaleGestureDetector(ScaleGestureListener())
-    private val gestureListener: GestureDetector
     private val isTranslateEnabled = true
 
     private var activePointerId = INVALID_POINTER_ID
@@ -26,20 +27,18 @@ class MultiTouchListener(
     private var prevRawX = 0f
     private var prevRawY = 0f
     private var outRect: Rect? = null
-    private var onGestureControl: OnGestureControl? = null
 
     companion object {
         private const val INVALID_POINTER_ID = -1
     }
 
     init {
-        gestureListener = GestureDetector(context, GestureListener())
         outRect = Rect(0, 0, 0, 0)
     }
 
     override fun onTouch(view: View, event: MotionEvent): Boolean {
         scaleGestureDetector.onTouchEvent(view, event)
-        gestureListener.onTouchEvent(event)
+        gestureDetector.onTouchEvent(event)
         if (!isTranslateEnabled) {
             return true
         }
@@ -83,21 +82,6 @@ class MultiTouchListener(
 
     interface OnGestureControl {
         fun onClick()
-    }
-
-    fun setOnGestureControl(onGestureControl: OnGestureControl?) {
-        this.onGestureControl = onGestureControl
-    }
-
-    private inner class GestureListener : SimpleOnGestureListener() {
-        override fun onSingleTapUp(e: MotionEvent): Boolean {
-            onGestureControl?.onClick()
-            return true
-        }
-
-        override fun onLongPress(e: MotionEvent) {
-            super.onLongPress(e)
-        }
     }
 
     private fun adjustTranslation(view: View, deltaX: Float, deltaY: Float) {
