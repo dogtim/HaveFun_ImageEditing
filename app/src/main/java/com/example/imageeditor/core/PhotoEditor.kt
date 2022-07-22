@@ -1,19 +1,17 @@
 package com.example.imageeditor.core
 
 import android.net.Uri
-import com.example.imageeditor.core.data.EmojiData
+import com.example.imageeditor.core.data.Emoji
 import com.example.imageeditor.core.graphic.EmojiGraphic
 import com.example.imageeditor.core.graphic.Graphic
 import com.example.imageeditor.core.graphic.GraphicManager
 import com.example.imageeditor.core.graphic.PhotoGraphic
 import com.example.imageeditor.core.view.PhotoEditorView
 
-class PhotoEditor(
-    val photoEditorView: PhotoEditorView
-) {
+class PhotoEditor(val photoEditorView: PhotoEditorView) {
     val graphicManager: GraphicManager = GraphicManager(photoEditorView)
 
-    fun addEmoji(emojiData: EmojiData) {
+    fun addEmoji(emojiData: Emoji) {
         val context = photoEditorView.context
         val emoji = EmojiGraphic(context, graphicManager, emojiData)
         addToEditor(emoji)

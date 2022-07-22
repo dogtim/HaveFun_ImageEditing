@@ -20,7 +20,7 @@ import androidx.core.view.children
 import androidx.recyclerview.widget.RecyclerView
 import com.example.imageeditor.core.PhotoEditor
 import com.example.imageeditor.core.data.Backup
-import com.example.imageeditor.core.data.EmojiData
+import com.example.imageeditor.core.data.Emoji
 import com.example.imageeditor.file.FileSaveHelper
 import com.example.imageeditor.file.PhotoSaverStatus
 import com.example.imageeditor.file.PhotoSaverViewModel
@@ -46,7 +46,7 @@ class MainActivity : AppCompatActivity(), EditorAdapter.OnEditorSelectedListener
         shapeFragment = ShapeFragment()
         shapeFragment.setListener(object: ShapeFragment.ShapeListener {
             override fun onClick(emojiUnicode: String) {
-                photoEditor.addEmoji(EmojiData(emojiUnicode))
+                photoEditor.addEmoji(Emoji(emojiUnicode))
             }
         })
 
@@ -135,10 +135,10 @@ class MainActivity : AppCompatActivity(), EditorAdapter.OnEditorSelectedListener
     override fun onClick(view: View) {
         when (view.id) {
             R.id.image_save_status -> {
-                val list = mutableListOf<EmojiData>()
+                val list = mutableListOf<Emoji>()
                 photoEditor.photoEditorView.children.forEach {
                     it.findViewById<TextView>(R.id.text_photo_editor)?.run {
-                        val data = EmojiData(text.toString())
+                        val data = Emoji(text.toString())
                         data.left = it.x.toInt()
                         data.top = it.y.toInt()
 
@@ -175,7 +175,7 @@ class MainActivity : AppCompatActivity(), EditorAdapter.OnEditorSelectedListener
         }
     }
 
-    private fun buildJson(emojiDataList: List<EmojiData>) {
+    private fun buildJson(emojiDataList: List<Emoji>) {
         val gson = Gson()
         val backup = Backup()
         backup.emojis = emojiDataList

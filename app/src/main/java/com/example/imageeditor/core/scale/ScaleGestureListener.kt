@@ -1,44 +1,43 @@
 package com.example.imageeditor.core.scale
 
 import android.view.View
-import com.example.imageeditor.core.listener.MultiTouchListener
 import com.example.imageeditor.core.listener.ScaleGestureDetector
 import kotlin.math.max
 import kotlin.math.min
 
 class ScaleGestureListener : ScaleGestureDetector.SimpleOnScaleGestureListener() {
     private val isTranslateEnabled = true
-    private var mPivotX = 0f
-    private var mPivotY = 0f
+    private var pivotX = 0f
+    private var pivotY = 0f
     private val minimumScale = 0.5f
     private val maximumScale = 10.0f
     private val isRotateEnabled = true
     private val isScaleEnabled = true
-    private val mIsPinchScalable = true
-    private val mPrevSpanVector = Vector2D()
+    private val isPinchScalable = true
+    private val prevSpanVector = Vector2D()
 
     override fun onScaleBegin(view: View, detector: ScaleGestureDetector): Boolean {
-        mPivotX = detector.getFocusX()
-        mPivotY = detector.getFocusY()
-        mPrevSpanVector.set(detector.getCurrentSpanVector())
-        return mIsPinchScalable
+        pivotX = detector.getFocusX()
+        pivotY = detector.getFocusY()
+        prevSpanVector.set(detector.getCurrentSpanVector())
+        return isPinchScalable
     }
 
     override fun onScale(view: View, detector: ScaleGestureDetector): Boolean {
         val info = TransformInfo()
         info.deltaScale = if (isScaleEnabled) detector.getScaleFactor() else 1.0f
         info.deltaAngle = if (isRotateEnabled) Vector2D.getAngle(
-            mPrevSpanVector,
+            prevSpanVector,
             detector.getCurrentSpanVector()
         ) else 0.0f
-        info.deltaX = if (isTranslateEnabled) detector.getFocusX() - mPivotX else 0.0f
-        info.deltaY = if (isTranslateEnabled) detector.getFocusY() - mPivotY else 0.0f
-        info.pivotX = mPivotX
-        info.pivotY = mPivotY
+        info.deltaX = if (isTranslateEnabled) detector.getFocusX() - pivotX else 0.0f
+        info.deltaY = if (isTranslateEnabled) detector.getFocusY() - pivotY else 0.0f
+        info.pivotX = pivotX
+        info.pivotY = pivotY
         info.minimumScale = minimumScale
         info.maximumScale = maximumScale
         move(view, info)
-        return !mIsPinchScalable
+        return !isPinchScalable
     }
 
     private fun adjustAngle(degrees: Float): Float {

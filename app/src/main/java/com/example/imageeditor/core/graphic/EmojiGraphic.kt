@@ -6,13 +6,12 @@ import android.view.Gravity
 import android.view.View
 import android.widget.TextView
 import com.example.imageeditor.R
-import com.example.imageeditor.core.data.EmojiData
-import com.example.imageeditor.core.listener.MultiTouchListener
+import com.example.imageeditor.core.data.Emoji
 
 internal class EmojiGraphic(
     context: Context,
     graphicManager: GraphicManager,
-    private val data: EmojiData
+    private val data: Emoji
 ) : Graphic(
     context = context,
     graphicManager = graphicManager,

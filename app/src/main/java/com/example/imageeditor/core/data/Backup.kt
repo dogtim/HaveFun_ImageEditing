@@ -4,5 +4,5 @@ import com.google.gson.annotations.SerializedName
 
 class Backup {
     @SerializedName("emojis")
-    var emojis: List<EmojiData>? = null
+    var emojis: List<Emoji>? = null
 }

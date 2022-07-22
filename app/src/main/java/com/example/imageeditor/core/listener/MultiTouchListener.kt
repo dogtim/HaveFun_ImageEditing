@@ -1,11 +1,8 @@
 package com.example.imageeditor.core.listener
 
-import android.content.Context
 import android.graphics.Rect
 import android.view.GestureDetector
-import android.view.GestureDetector.SimpleOnGestureListener
 import android.view.MotionEvent
-import android.view.MotionEvent.INVALID_POINTER_ID
 import android.view.View
 import android.view.View.OnTouchListener
 import com.example.imageeditor.core.PhotoEditorViewState
@@ -13,7 +10,6 @@ import com.example.imageeditor.core.scale.ScaleGestureListener
 
 // https://www.twblogs.net/a/5cd35c7abd9eee6726c953a8
 class MultiTouchListener(
-    private val context: Context,
     private val viewState: PhotoEditorViewState,
     private val gestureDetector: GestureDetector
 ) : OnTouchListener {

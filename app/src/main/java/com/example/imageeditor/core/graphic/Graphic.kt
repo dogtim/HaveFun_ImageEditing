@@ -28,7 +28,6 @@ abstract class Graphic(
 
     private fun getMultiTouchListener(): MultiTouchListener {
         return MultiTouchListener(
-            context,
             graphicManager.viewState,
             GestureDetector(context, GestureListener())
         )
