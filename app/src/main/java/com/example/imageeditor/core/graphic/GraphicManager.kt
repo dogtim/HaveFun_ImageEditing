@@ -9,10 +9,8 @@ import com.example.imageeditor.R
 import com.example.imageeditor.core.PhotoEditorViewState
 import com.example.imageeditor.core.view.PhotoEditorView
 
-class GraphicManager(
-    private val photoEditorView: PhotoEditorView,
-    val viewState: PhotoEditorViewState
-) {
+class GraphicManager(private val photoEditorView: PhotoEditorView) {
+    val viewState: PhotoEditorViewState = PhotoEditorViewState()
 
     /**
      * Adds a [graphic] to this [photoEditorView], and keep the view state in [viewState]
@@ -27,8 +25,7 @@ class GraphicManager(
         if (graphic.rect().left != 0 || graphic.rect().top != 0) {
             params.marginStart = graphic.rect().left
             params.topMargin = graphic.rect().top
-        }
-        else {
+        } else {
             params.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE)
         }
 
@@ -67,12 +64,17 @@ class GraphicManager(
         return viewState.redoViewsCount != 0
     }
 
-    fun clear() {
+    fun clearAppearance() {
         for (i in 0 until photoEditorView.childCount) {
             val childAt = photoEditorView.getChildAt(i)
             childAt.findViewById<FrameLayout>(R.id.editor_border)?.setBackgroundResource(0)
             childAt.findViewById<ImageView>(R.id.image_close)?.visibility = View.GONE
         }
         viewState.clearCurrentSelectedView()
+    }
+
+    fun clear() {
+        photoEditorView.removeAllViews()
+        viewState.clear()
     }
 }

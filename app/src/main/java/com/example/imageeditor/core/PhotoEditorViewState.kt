@@ -51,4 +51,9 @@ class PhotoEditorViewState {
         return redoViews[index]
     }
 
+    fun clear() {
+        selectedView = null
+        addedViews.clear()
+        redoViews.clear()
+    }
 }

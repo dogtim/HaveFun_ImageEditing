@@ -3,7 +3,6 @@ package com.example.imageeditor
 import android.Manifest
 import android.app.Activity
 import android.content.Context
-import android.content.Context.MODE_PRIVATE
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
@@ -70,7 +69,7 @@ class MainActivity : AppCompatActivity(), EditorAdapter.OnEditorSelectedListener
                 }
                 PhotoSaverStatus.LOADING -> {
                     loadingView.visibility = View.VISIBLE
-                    photoEditor.graphicManager.clear()
+                    photoEditor.graphicManager.clearAppearance()
                 }
                 else -> {
                     Log.e("MainActivity", "You should check the PhotoSaverStatus problem")
@@ -149,7 +148,7 @@ class MainActivity : AppCompatActivity(), EditorAdapter.OnEditorSelectedListener
                 buildJson(list)
             }
             R.id.image_clear -> {
-                // TODO clear the data
+                photoEditor.clear()
             }
             R.id.image_restore -> {
                 val string = readFromFile(this)

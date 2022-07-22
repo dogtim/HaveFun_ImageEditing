@@ -6,13 +6,12 @@ import com.example.imageeditor.core.graphic.EmojiGraphic
 import com.example.imageeditor.core.graphic.Graphic
 import com.example.imageeditor.core.graphic.GraphicManager
 import com.example.imageeditor.core.graphic.PhotoGraphic
-import com.example.imageeditor.core.listener.MultiTouchListener
 import com.example.imageeditor.core.view.PhotoEditorView
 
-class PhotoEditor (
+class PhotoEditor(
     val photoEditorView: PhotoEditorView
-)  {
-    val graphicManager: GraphicManager = GraphicManager(photoEditorView, PhotoEditorViewState())
+) {
+    val graphicManager: GraphicManager = GraphicManager(photoEditorView)
 
     fun addEmoji(emojiData: EmojiData) {
         val context = photoEditorView.context
@@ -28,12 +27,11 @@ class PhotoEditor (
     }
 
     private fun addToEditor(graphic: Graphic) {
-        graphicManager.clear()
+        graphicManager.clearAppearance()
         graphicManager.addView(graphic)
         // Change the in-focus view
         graphicManager.viewState.selectedView = graphic.rootView
     }
-
 
     fun undo(): Boolean {
         return graphicManager.undoView()
@@ -41,6 +39,10 @@ class PhotoEditor (
 
     fun redo(): Boolean {
         return graphicManager.redoView()
+    }
+
+    fun clear() {
+        graphicManager.clear()
     }
 
 }

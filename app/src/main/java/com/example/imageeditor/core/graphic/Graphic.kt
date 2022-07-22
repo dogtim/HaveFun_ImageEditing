@@ -37,7 +37,7 @@ abstract class Graphic(
         }
     }
 
-    protected fun buildGestureController(
+    private fun buildGestureController(
         viewState: PhotoEditorViewState
     ): MultiTouchListener.OnGestureControl {
         return object : MultiTouchListener.OnGestureControl {
@@ -46,7 +46,7 @@ abstract class Graphic(
              * 2. Set Visibility = TRUE to the Border which user select
              */
             override fun onClick() {
-                graphicManager.clear()
+                graphicManager.clearAppearance()
                 toggleSelection()
                 viewState.selectedView = rootView
             }
