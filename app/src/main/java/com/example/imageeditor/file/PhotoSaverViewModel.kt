@@ -10,10 +10,8 @@ import androidx.lifecycle.viewModelScope
 import com.example.imageeditor.core.view.PhotoEditorView
 import kotlinx.coroutines.launch
 
-enum class PhotoSaverStatus { LOADING, ERROR, DONE }
-
 class PhotoSaverViewModel(private val fileSaveHelper: FileSaveHelper)  : ViewModel() {
-    val status: LiveData<PhotoSaverStatus> = fileSaveHelper.status
+    val status: LiveData<FileAccessStatus> = fileSaveHelper.status
 
     @RequiresPermission(allOf = [Manifest.permission.WRITE_EXTERNAL_STORAGE])
     fun exportFile(fileName: String, photoEditorView: PhotoEditorView) {

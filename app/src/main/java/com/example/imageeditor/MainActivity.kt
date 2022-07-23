@@ -21,8 +21,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.imageeditor.core.PhotoEditor
 import com.example.imageeditor.core.data.Backup
 import com.example.imageeditor.core.data.Emoji
+import com.example.imageeditor.file.BackupViewModel
+import com.example.imageeditor.file.FileAccessStatus
 import com.example.imageeditor.file.FileSaveHelper
-import com.example.imageeditor.file.PhotoSaverStatus
 import com.example.imageeditor.file.PhotoSaverViewModel
 import com.example.imageeditor.fragment.ShapeFragment
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -38,6 +39,9 @@ class MainActivity : AppCompatActivity(), EditorAdapter.OnEditorSelectedListener
             FileSaveHelper(contentResolver)
         )
     }
+
+    private val backViewModel: BackupViewModel by viewModels()
+
     private lateinit var loadingView: ProgressBar
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -61,13 +65,13 @@ class MainActivity : AppCompatActivity(), EditorAdapter.OnEditorSelectedListener
     private fun initViewModel() {
         viewModel.status.observe(this) { status ->
             when (status) {
-                PhotoSaverStatus.DONE -> {
+                FileAccessStatus.DONE -> {
                     loadingView.visibility = View.GONE
                 }
-                PhotoSaverStatus.ERROR -> {
+                FileAccessStatus.ERROR -> {
                     loadingView.visibility = View.GONE
                 }
-                PhotoSaverStatus.LOADING -> {
+                FileAccessStatus.LOADING -> {
                     loadingView.visibility = View.VISIBLE
                     photoEditor.graphicManager.clearAppearance()
                 }
@@ -132,6 +136,7 @@ class MainActivity : AppCompatActivity(), EditorAdapter.OnEditorSelectedListener
                 }
             }
         }
+
     override fun onClick(view: View) {
         when (view.id) {
             R.id.image_save_status -> {
@@ -147,13 +152,13 @@ class MainActivity : AppCompatActivity(), EditorAdapter.OnEditorSelectedListener
                         list.add(data)
                     }
                 }
-                buildJson(list)
+                backViewModel.buildJson(list, this)
             }
             R.id.image_clear -> {
                 photoEditor.clear()
             }
             R.id.image_restore -> {
-                val string = readFromFile(this)
+                val string = backViewModel.readFromFile(this)
                 val gson = Gson()
                 val testModel = gson.fromJson(string, Backup::class.java)
 
@@ -174,48 +179,6 @@ class MainActivity : AppCompatActivity(), EditorAdapter.OnEditorSelectedListener
             R.id.image_redo -> {
                 photoEditor.redo()
             }
-        }
-    }
-
-    private fun buildJson(emojiDataList: List<Emoji>) {
-        val gson = Gson()
-        val backup = Backup()
-        backup.emojis = emojiDataList
-        val json = gson.toJson(backup)
-
-        writeToFile(json)
-    }
-
-    private fun readFromFile(context: Context): String {
-        var ret = ""
-        try {
-            val inputStream: InputStream? = context.openFileInput("config.txt")
-            if (inputStream != null) {
-                val inputStreamReader = InputStreamReader(inputStream)
-                val bufferedReader = BufferedReader(inputStreamReader)
-                var receiveString: String? = ""
-                val stringBuilder = StringBuilder()
-                while (bufferedReader.readLine().also { receiveString = it } != null) {
-                    stringBuilder.append("\n").append(receiveString)
-                }
-                inputStream.close()
-                ret = stringBuilder.toString()
-            }
-        } catch (e: FileNotFoundException) {
-            Log.e("login activity", "File not found: " + e.toString())
-        } catch (e: IOException) {
-            Log.e("login activity", "Can not read file: $e")
-        }
-        return ret
-    }
-    private fun writeToFile(data: String) {
-        try {
-            val outputStreamWriter =
-                OutputStreamWriter(openFileOutput("config.txt", MODE_PRIVATE))
-            outputStreamWriter.write(data)
-            outputStreamWriter.close()
-        } catch (e: IOException) {
-            Log.e("Exception", "File write failed: " + e.toString())
         }
     }
 

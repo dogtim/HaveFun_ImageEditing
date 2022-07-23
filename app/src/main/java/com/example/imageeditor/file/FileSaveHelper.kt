@@ -20,7 +20,7 @@ import java.lang.Exception
 
 class FileSaveHelper(private val contentResolver: ContentResolver) : LifecycleObserver {
     private var fileMeta: FileMeta? = null
-    val status = MutableLiveData<PhotoSaverStatus>()
+    val status = MutableLiveData<FileAccessStatus>()
     private val scale = 1.0f
 
     private fun getBitmap(view: View): Bitmap {
@@ -67,10 +67,10 @@ class FileSaveHelper(private val contentResolver: ContentResolver) : LifecycleOb
             notifyThatFileIsNowPubliclyAvailable(
                 contentResolver
             )
-            status.value = PhotoSaverStatus.DONE
+            status.value = FileAccessStatus.DONE
         }.onFailure {
             it.printStackTrace()
-            status.value = PhotoSaverStatus.ERROR
+            status.value = FileAccessStatus.ERROR
         }
     }
 
@@ -83,7 +83,7 @@ class FileSaveHelper(private val contentResolver: ContentResolver) : LifecycleOb
      * @param photoEditorView the view generate the bitmap
      */
     fun createFile(fileNameToSave: String, photoEditorView: PhotoEditorView) {
-        status.value = PhotoSaverStatus.LOADING
+        status.value = FileAccessStatus.LOADING
         var cursor: Cursor? = null
         try {
             // Build the edited image URI for the MediaStore
@@ -109,7 +109,7 @@ class FileSaveHelper(private val contentResolver: ContentResolver) : LifecycleOb
         } catch (ex: Exception) {
             ex.printStackTrace()
             updateResult(false, null, ex.message, null, null)
-            status.value = PhotoSaverStatus.ERROR
+            status.value = FileAccessStatus.ERROR
         } finally {
             cursor?.close()
         }
