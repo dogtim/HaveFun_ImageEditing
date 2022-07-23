@@ -87,19 +87,14 @@ class MainActivity : AppCompatActivity(), EditorAdapter.OnEditorSelectedListener
     }
 
     private fun initImageView() {
-        val undoImageView: ImageView = findViewById(R.id.image_undo)
-        undoImageView.setOnClickListener(this)
-        val saveImageView: ImageView = findViewById(R.id.image_save)
-        saveImageView.setOnClickListener(this)
-        val redoImageView: ImageView = findViewById(R.id.image_redo)
-        redoImageView.setOnClickListener(this)
-        val saveStatusImageView: ImageView = findViewById(R.id.image_save_status)
-        saveStatusImageView.setOnClickListener(this)
-        val clearImageView: ImageView = findViewById(R.id.image_clear)
-        clearImageView.setOnClickListener(this)
-
-        val restoreImageView: ImageView = findViewById(R.id.image_restore)
-        restoreImageView.setOnClickListener(this)
+        val imageViewList =  listOf(
+            R.id.image_undo, R.id.image_save, R.id.image_redo,
+            R.id.image_save_status, R.id.image_clear, R.id.image_restore)
+        
+        imageViewList.forEach {
+            val imageView: ImageView = findViewById(it)
+            imageView.setOnClickListener(this)
+        }
     }
 
     private fun showBottomSheetDialogFragment(fragment: BottomSheetDialogFragment) {
