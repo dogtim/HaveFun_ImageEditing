@@ -2,7 +2,6 @@ package com.example.imageeditor
 
 import android.Manifest
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
@@ -28,7 +27,6 @@ import com.example.imageeditor.file.PhotoSaverViewModel
 import com.example.imageeditor.fragment.ShapeFragment
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.gson.Gson
-import java.io.*
 
 class MainActivity : AppCompatActivity(), EditorAdapter.OnEditorSelectedListener, View.OnClickListener {
     private lateinit var shapeFragment: ShapeFragment
@@ -40,7 +38,7 @@ class MainActivity : AppCompatActivity(), EditorAdapter.OnEditorSelectedListener
         )
     }
 
-    private val backViewModel: BackupViewModel by viewModels()
+    private val backupViewModel: BackupViewModel by viewModels()
 
     private lateinit var loadingView: ProgressBar
 
@@ -59,10 +57,10 @@ class MainActivity : AppCompatActivity(), EditorAdapter.OnEditorSelectedListener
 
         initRecycleView()
         initImageView()
-        initViewModel()
+        initViewModels()
     }
 
-    private fun initViewModel() {
+    private fun initViewModels() {
         viewModel.status.observe(this) { status ->
             when (status) {
                 FileAccessStatus.DONE -> {
@@ -80,6 +78,23 @@ class MainActivity : AppCompatActivity(), EditorAdapter.OnEditorSelectedListener
                 }
             }
         }
+
+        backupViewModel.status.observe(this) { status ->
+            when (status) {
+                FileAccessStatus.DONE -> {
+                    loadingView.visibility = View.GONE
+                }
+                FileAccessStatus.ERROR -> {
+                    loadingView.visibility = View.GONE
+                }
+                FileAccessStatus.LOADING -> {
+                    loadingView.visibility = View.VISIBLE
+                }
+                else -> {
+                    Log.e("MainActivity", "You should check the PhotoSaverStatus problem")
+                }
+            }
+        }
     }
     private fun initRecycleView() {
         val recyclerView: RecyclerView = findViewById(R.id.recycler_editing_tools)
@@ -90,7 +105,7 @@ class MainActivity : AppCompatActivity(), EditorAdapter.OnEditorSelectedListener
         val imageViewList =  listOf(
             R.id.image_undo, R.id.image_save, R.id.image_redo,
             R.id.image_save_status, R.id.image_clear, R.id.image_restore)
-        
+
         imageViewList.forEach {
             val imageView: ImageView = findViewById(it)
             imageView.setOnClickListener(this)
@@ -147,13 +162,13 @@ class MainActivity : AppCompatActivity(), EditorAdapter.OnEditorSelectedListener
                         list.add(data)
                     }
                 }
-                backViewModel.buildJson(list, this)
+                backupViewModel.buildJson(list, this)
             }
             R.id.image_clear -> {
                 photoEditor.clear()
             }
             R.id.image_restore -> {
-                val string = backViewModel.readFromFile(this)
+                val string = backupViewModel.readFromFile(this)
                 val gson = Gson()
                 val testModel = gson.fromJson(string, Backup::class.java)
 
