@@ -162,19 +162,19 @@ class MainActivity : AppCompatActivity(), EditorAdapter.OnEditorSelectedListener
                         list.add(data)
                     }
                 }
-                backupViewModel.buildJson(list, this)
+                backupViewModel.buildJson(list)
             }
             R.id.image_clear -> {
                 photoEditor.clear()
             }
             R.id.image_restore -> {
-                val string = backupViewModel.readFromFile(this)
-                val gson = Gson()
-                val testModel = gson.fromJson(string, Backup::class.java)
-
-                testModel.emojis?.let {
-                    it.forEach { emoji ->
-                        photoEditor.addEmoji(emoji)
+                val string = backupViewModel.readFromFile()
+                string?.let {
+                    val backup = Gson().fromJson(string, Backup::class.java)
+                    backup.emojis?.let {
+                        it.forEach { emoji ->
+                            photoEditor.addEmoji(emoji)
+                        }
                     }
                 }
             }
