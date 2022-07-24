@@ -18,7 +18,6 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.children
 import androidx.recyclerview.widget.RecyclerView
 import com.example.imageeditor.core.PhotoEditor
-import com.example.imageeditor.core.data.Backup
 import com.example.imageeditor.core.data.Emoji
 import com.example.imageeditor.file.BackupViewModel
 import com.example.imageeditor.file.FileAccessStatus
@@ -26,7 +25,6 @@ import com.example.imageeditor.file.FileSaveHelper
 import com.example.imageeditor.file.PhotoSaverViewModel
 import com.example.imageeditor.fragment.ShapeFragment
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.google.gson.Gson
 
 class MainActivity : AppCompatActivity(), EditorAdapter.OnEditorSelectedListener, View.OnClickListener {
     private lateinit var shapeFragment: ShapeFragment
@@ -93,6 +91,12 @@ class MainActivity : AppCompatActivity(), EditorAdapter.OnEditorSelectedListener
                 else -> {
                     Log.e("MainActivity", "You should check the PhotoSaverStatus problem")
                 }
+            }
+        }
+
+        backupViewModel.backup.observe(this) {
+            it.emojis?.forEach { emoji ->
+                photoEditor.addEmoji(emoji)
             }
         }
     }
@@ -168,15 +172,7 @@ class MainActivity : AppCompatActivity(), EditorAdapter.OnEditorSelectedListener
                 photoEditor.clear()
             }
             R.id.image_restore -> {
-                val string = backupViewModel.readFromFile()
-                string?.let {
-                    val backup = Gson().fromJson(string, Backup::class.java)
-                    backup.emojis?.let {
-                        it.forEach { emoji ->
-                            photoEditor.addEmoji(emoji)
-                        }
-                    }
-                }
+                backupViewModel.restore()
             }
             R.id.image_undo -> {
                 photoEditor.undo()
