@@ -53,7 +53,7 @@ class ShapeFragment : BottomSheetDialogFragment() {
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
             val view =
-                LayoutInflater.from(parent.context).inflate(com.example.imageeditor.R.layout.row_emoji, parent, false)
+                LayoutInflater.from(parent.context).inflate(R.layout.row_emoji, parent, false)
             return ViewHolder(view)
         }
 
