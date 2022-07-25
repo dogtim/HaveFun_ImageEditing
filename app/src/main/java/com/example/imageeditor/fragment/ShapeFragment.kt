@@ -42,13 +42,8 @@ class ShapeFragment : BottomSheetDialogFragment() {
 
     inner class ShapeAdapter(private val context: Context) : RecyclerView.Adapter<ShapeAdapter.ViewHolder>() {
 
-        private val shapeList: ArrayList<String> by lazy {
-            val convertedEmojiList = ArrayList<String>()
-            val emojiList = context.resources.getStringArray(R.array.photo_editor_emoji)
-            for (emojiUnicode in emojiList) {
-                convertedEmojiList.add(convertEmoji(emojiUnicode))
-            }
-            convertedEmojiList
+        val shapeList: ArrayList<String> by lazy {
+            getEmojis(context)
         }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -74,12 +69,28 @@ class ShapeFragment : BottomSheetDialogFragment() {
                 }
             }
         }
+    }
+
+    companion object {
+
+        /**
+         * Provide the list of emoji in form of unicode string
+         *
+         * @param context context
+         * @return list of emoji unicode
+         */
+        fun getEmojis(context: Context): ArrayList<String> {
+            val emojiList = context.resources.getStringArray(R.array.photo_editor_emoji)
+            return emojiList.map {
+                convertEmoji(it)
+            } as ArrayList<String>
+        }
 
         private fun convertEmoji(emoji: String): String {
             return try {
                 val convertEmojiToInt = emoji.substring(2).toInt(16)
                 String(Character.toChars(convertEmojiToInt))
-            } catch (e: NumberFormatException) {
+            } catch (e: java.lang.NumberFormatException) {
                 ""
             }
         }

@@ -10,12 +10,11 @@ import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
+import com.example.imageeditor.fragment.ShapeFragment
 import org.junit.Assert.*
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import java.util.ArrayList
-
 
 /**
  * Instrumented test, which will execute on an Android device.
@@ -25,6 +24,7 @@ import java.util.ArrayList
 @RunWith(AndroidJUnit4::class)
 class ExampleInstrumentedTest {
 
+    lateinit var context: Context
     @get:Rule
     val rule = ActivityScenarioRule(MainActivity::class.java)
 
@@ -38,17 +38,6 @@ class ExampleInstrumentedTest {
 
     }
 
-    private fun convertEmoji(emoji: String): String {
-        return try {
-            val convertEmojiToInt = emoji.substring(2).toInt(16)
-            String(Character.toChars(convertEmojiToInt))
-        } catch (e: NumberFormatException) {
-            ""
-        }
-    }
-
-    lateinit var context: Context
-
     @Test
     fun checkIfEmojiIsDisplayedWhenEmojiIsSelected() {
 
@@ -56,11 +45,7 @@ class ExampleInstrumentedTest {
             context = it
         }
 
-        val emojiList = context.resources.getStringArray(R.array.photo_editor_emoji)
-        val emojis = ArrayList<String>()
-        for (emojiUnicode in emojiList) {
-            emojis.add(convertEmoji(emojiUnicode))
-        }
+        val emojis = ShapeFragment.getEmojis(context)
         val emojiPosition = 1
         val emojiUnicode = emojis[emojiPosition]
 
