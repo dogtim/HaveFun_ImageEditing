@@ -1,6 +1,7 @@
 package com.example.imageeditor
 
-import android.content.Context
+import android.widget.FrameLayout
+import androidx.lifecycle.Lifecycle
 import androidx.recyclerview.widget.RecyclerView
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.action.ViewActions
@@ -15,6 +16,7 @@ import org.junit.Assert.*
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import java.lang.Thread.sleep
 
 /**
  * Instrumented test, which will execute on an Android device.
@@ -24,10 +26,11 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class ExampleInstrumentedTest {
 
-    lateinit var context: Context
+    lateinit var activity: MainActivity
+    val timeSleep: Long = 500
+
     @get:Rule
     val rule = ActivityScenarioRule(MainActivity::class.java)
-
     @Test
     fun myTest() {
         Espresso.onView(ViewMatchers.withText(R.string.app_name)).check(
@@ -42,10 +45,12 @@ class ExampleInstrumentedTest {
     fun checkIfEmojiIsDisplayedWhenEmojiIsSelected() {
 
         rule.scenario.onActivity {
-            context = it
+            activity = it
         }
-
-        val emojis = ShapeFragment.getEmojis(context)
+        rule.scenario.moveToState(Lifecycle.State.CREATED)
+        rule.scenario.moveToState(Lifecycle.State.STARTED)
+        rule.scenario.moveToState(Lifecycle.State.RESUMED)
+        val emojis = ShapeFragment.getEmojis(activity)
         val emojiPosition = 1
         val emojiUnicode = emojis[emojiPosition]
 
@@ -63,6 +68,23 @@ class ExampleInstrumentedTest {
             )
         )
 
+        testClearAndRestore()
+    }
+
+    private fun testClearAndRestore() {
+        var firstEmojiStickerFrameBorder = activity.findViewById<FrameLayout>(R.id.frmBorder)
+        firstEmojiStickerFrameBorder.x = 0f
+        sleep(timeSleep)
+
+        Espresso.onView(ViewMatchers.withId(R.id.image_save_status)).perform(ViewActions.click())
+        sleep(timeSleep)
+
+        Espresso.onView(ViewMatchers.withId(R.id.image_clear)).perform(ViewActions.click())
+        sleep(timeSleep)
+        Espresso.onView(ViewMatchers.withId(R.id.image_restore)).perform(ViewActions.click())
+        firstEmojiStickerFrameBorder = activity.findViewById<FrameLayout>(R.id.frmBorder)
+        assertEquals(0f, firstEmojiStickerFrameBorder.x)
+        sleep(timeSleep)
     }
 
     @Test
