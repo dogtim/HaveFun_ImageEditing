@@ -9,13 +9,10 @@ import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.ProgressBar
-import android.widget.TextView
-import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.core.view.children
 import androidx.recyclerview.widget.RecyclerView
 import com.example.imageeditor.core.PhotoEditor
 import com.example.imageeditor.core.data.Emoji
@@ -153,38 +150,12 @@ class MainActivity : AppCompatActivity(), EditorAdapter.OnEditorSelectedListener
 
     override fun onClick(view: View) {
         when (view.id) {
-            R.id.image_save_status -> {
-                val list = mutableListOf<Emoji>()
-                photoEditor.photoEditorView.children.forEach {
-                    it.findViewById<TextView>(R.id.text_photo_editor)?.run {
-                        val data = Emoji(text.toString())
-                        data.left = it.x.toInt()
-                        data.top = it.y.toInt()
-                        data.rotation = it.rotation
-                        data.scaleX = it.scaleX
-                        data.scaleY = it.scaleY
-                        list.add(data)
-                    }
-                }
-                backupViewModel.buildJson(list)
-            }
-            R.id.image_clear -> {
-                photoEditor.clear()
-            }
-            R.id.image_restore -> {
-                backupViewModel.restore()
-            }
-            R.id.image_undo -> {
-                photoEditor.undo()
-            }
-
-            R.id.image_save -> {
-                Toast.makeText(this, "Save", Toast.LENGTH_SHORT).show()
-                saveImage()
-            }
-            R.id.image_redo -> {
-                photoEditor.redo()
-            }
+            R.id.image_save_status -> backupViewModel.buildJson(photoEditor.photoEditorView.createEmojiList())
+            R.id.image_clear -> photoEditor.clear()
+            R.id.image_restore -> backupViewModel.restore()
+            R.id.image_undo -> photoEditor.undo()
+            R.id.image_save -> saveImage()
+            R.id.image_redo -> photoEditor.redo()
         }
     }
 
@@ -192,7 +163,6 @@ class MainActivity : AppCompatActivity(), EditorAdapter.OnEditorSelectedListener
     // Step 1: Create the URI of Image File
     // Step 2: Generate the image file and save to this URI
     private fun saveImage() {
-        loadingView.visibility = View.VISIBLE
         val fileName = System.currentTimeMillis().toString() + ".png"
         val hasStoragePermission = ContextCompat.checkSelfPermission(
             this,

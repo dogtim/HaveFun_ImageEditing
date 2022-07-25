@@ -8,6 +8,7 @@ import com.example.imageeditor.core.data.Backup
 import com.example.imageeditor.core.data.Emoji
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.io.*
 
@@ -22,6 +23,7 @@ class BackupViewModel(application: Application) : AndroidViewModel(application) 
     fun buildJson(emojiDataList: List<Emoji>) {
         viewModelScope.launch(Dispatchers.IO) {
             _status.postValue(FileAccessStatus.LOADING)
+            delay(300)
             val backup = Backup()
             backup.emojis = emojiDataList
             writeToFile(Gson().toJson(backup))

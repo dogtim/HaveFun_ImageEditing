@@ -67,10 +67,10 @@ class FileSaveHelper(private val contentResolver: ContentResolver) : LifecycleOb
             notifyThatFileIsNowPubliclyAvailable(
                 contentResolver
             )
-            status.value = FileAccessStatus.DONE
+            status.postValue(FileAccessStatus.DONE)
         }.onFailure {
             it.printStackTrace()
-            status.value = FileAccessStatus.ERROR
+            status.postValue(FileAccessStatus.ERROR)
         }
     }
 
@@ -83,7 +83,7 @@ class FileSaveHelper(private val contentResolver: ContentResolver) : LifecycleOb
      * @param photoEditorView the view generate the bitmap
      */
     fun createFile(fileNameToSave: String, photoEditorView: PhotoEditorView) {
-        status.value = FileAccessStatus.LOADING
+        status.postValue(FileAccessStatus.LOADING)
         var cursor: Cursor? = null
         try {
             // Build the edited image URI for the MediaStore
@@ -109,7 +109,7 @@ class FileSaveHelper(private val contentResolver: ContentResolver) : LifecycleOb
         } catch (ex: Exception) {
             ex.printStackTrace()
             updateResult(false, null, ex.message, null, null)
-            status.value = FileAccessStatus.ERROR
+            status.postValue(FileAccessStatus.ERROR)
         } finally {
             cursor?.close()
         }

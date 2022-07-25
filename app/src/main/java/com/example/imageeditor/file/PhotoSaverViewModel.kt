@@ -8,6 +8,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.imageeditor.core.view.PhotoEditorView
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class PhotoSaverViewModel(private val fileSaveHelper: FileSaveHelper)  : ViewModel() {
@@ -15,7 +17,8 @@ class PhotoSaverViewModel(private val fileSaveHelper: FileSaveHelper)  : ViewMod
 
     @RequiresPermission(allOf = [Manifest.permission.WRITE_EXTERNAL_STORAGE])
     fun exportFile(fileName: String, photoEditorView: PhotoEditorView) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
+            delay(300)
             fileSaveHelper.createFile(fileName, photoEditorView)
         }
     }
