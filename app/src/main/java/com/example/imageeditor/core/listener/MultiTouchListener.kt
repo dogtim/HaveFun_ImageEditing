@@ -76,10 +76,6 @@ class MultiTouchListener(
         return true
     }
 
-    interface OnGestureControl {
-        fun onClick()
-    }
-
     private fun adjustTranslation(view: View, deltaX: Float, deltaY: Float) {
         val deltaVector = floatArrayOf(deltaX, deltaY)
         view.matrix.mapVectors(deltaVector)

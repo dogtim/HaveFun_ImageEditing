@@ -27,18 +27,18 @@ import java.lang.Thread.sleep
 class ExampleInstrumentedTest {
 
     lateinit var activity: MainActivity
-    val timeSleep: Long = 500
+    private val timeSleep: Long = 500
 
     @get:Rule
     val rule = ActivityScenarioRule(MainActivity::class.java)
+
     @Test
-    fun myTest() {
+    fun simpleTest() {
         Espresso.onView(ViewMatchers.withText(R.string.app_name)).check(
             ViewAssertions.matches(
                 ViewMatchers.isDisplayed()
             )
         )
-
     }
 
     @Test
